@@ -34,7 +34,7 @@ public class CustomerServiceTest extends AbstractTest {
 		Customer copyCreated;
 
 		created = this.customerService.findAll().iterator().next();
-		System.out.println(created);
+		this.authenticate(created.getUserAccount().getUsername());
 		copyCreated = this.copyCustomer(created);
 		copyCreated.setName("TestCustomer");
 		saved = this.customerService.save(copyCreated);
@@ -80,14 +80,8 @@ public class CustomerServiceTest extends AbstractTest {
 		Assert.isNull(customer.getSurname());
 		Assert.isNull(customer.getPhoneNumber());
 		Assert.isNull(customer.getPhoto());
-		Assert.isNull(customer.getBoxes());
-		Assert.isNull(customer.getComplaints());
-		Assert.isNull(customer.getEndorsements());
 		Assert.isNull(customer.getMiddleName());
 		Assert.isNull(customer.getSurname());
-		Assert.isNull(customer.getSocialIdentity());
-		Assert.isNull(customer.getFixUpTasks());
-		Assert.isNull(customer.getUserAccount());
 	}
 
 	private Customer copyCustomer(final Customer customer) {

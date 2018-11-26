@@ -11,6 +11,7 @@ import org.springframework.util.Assert;
 
 import repositories.CustomerRepository;
 import security.Authority;
+import security.LoginService;
 import security.UserAccount;
 import domain.Application;
 import domain.Customer;
@@ -58,7 +59,7 @@ public class CustomerService {
 
 	public Customer save(final Customer customer) {
 		Customer result, saved;
-		//UserAccount userAccount;
+		final UserAccount logedUserAccount;
 		Authority authority;
 		Md5PasswordEncoder encoder;
 
@@ -66,23 +67,28 @@ public class CustomerService {
 		authority = new Authority();
 		authority.setAuthority("CUSTOMER");
 		Assert.notNull(customer, "customer.not.null");
-		//	userAccount = LoginService.getPrincipal();
 
-		//Si el customer ya persiste vemos que el actor logeado sea el propio customer que se quiere modificar
 		if (customer.getId() != 0) {
-			//	Assert.isTrue(userAccount.equals(customer.getUserAccount()), "customer.notEqual.userAccount");
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "customer.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(customer.getUserAccount()), "customer.notEqual.userAccount");
 			saved = this.customerRepository.findOne(customer.getId());
 			Assert.notNull(saved, "customer.not.null");
 			Assert.isTrue(saved.getUserAccount().getUsername().equals(customer.getUserAccount().getUsername()), "customer.notEqual.username");
 			Assert.isTrue(customer.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "customer.notEqual.password");
-			//Assert.isTrue(customer.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && customer.getSuspicious() == saved.getSuspicious(), "customer.notEqual.accountOrSuspicious");
-		} else
-			//	Assert.isTrue(userAccount.getAuthorities().contains(authority), "customer.authority.customer"); //Si no vemos que un administrador va a guardar a otro
-			//	Assert.isTrue(customer.getSuspicious() == false, "customer.notSuspicious.false");
+			Assert.isTrue(customer.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && customer.isSuspicious() == saved.isSuspicious(), "customer.notEqual.accountOrSuspicious");
+
+		} else {
+			Assert.isTrue(customer.isSuspicious() == false, "customer.notSuspicious.false");
 			customer.getUserAccount().setPassword(encoder.encodePassword(customer.getUserAccount().getPassword(), null));
+			customer.getUserAccount().setEnabled(true);
+
+		}
 
 		result = this.customerRepository.save(customer);
+
 		return result;
+
 	}
 
 	public Customer create() {
