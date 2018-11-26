@@ -12,6 +12,7 @@ import org.springframework.util.Assert;
 import repositories.CustomerRepository;
 import security.Authority;
 import security.UserAccount;
+import domain.Application;
 import domain.Customer;
 
 @Service
@@ -110,6 +111,13 @@ public class CustomerService {
 		Assert.notNull(customer);
 		Assert.isTrue(this.customerRepository.exists(customer.getId()));
 		this.customerRepository.delete(customer);
+	}
+
+	public Customer findCustomerByApplication(final Application application) {
+		Assert.notNull(application);
+		Assert.isTrue(application.getId() != 0);
+		final Customer res = this.customerRepository.findCustomerByApplicationId(application.getId());
+		return res;
 	}
 
 }

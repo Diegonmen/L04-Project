@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import repositories.ApplicationRepository;
-import repositories.CustomerRepository;
+import security.LoginService;
+import security.UserAccount;
 import domain.Application;
 import domain.Customer;
 
@@ -26,7 +28,7 @@ public class ApplicationService {
 	// Supporting services ----------------------------------------------------
 
 	@Autowired
-	private CustomerRepository		customerService;
+	private CustomerService			customerService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -38,11 +40,22 @@ public class ApplicationService {
 	public Application save(final Application application) {
 		Assert.notNull(application);
 		Assert.isTrue(application.getId() != 0);
+		final UserAccount userAccount = LoginService.getPrincipal();
+		final Date currentMoment = new Date(System.currentTimeMillis() - 1);
 
-		Application result;
-		result = this.applicationRepository.save(application);
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains("CUSTOMER") && this.findByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
+			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
+				//update con status rejected
+			} else {
+				//update con status accepted
+			}
+		} else {
 
-		return result;
+			Application result;
+			result = this.applicationRepository.save(application);
+
+			return result;
+		}
 	}
 
 	public List<Application> findAll() {

@@ -33,6 +33,8 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		HandyWorker saved;
 		HandyWorker copyCreated;
 
+		this.authenticate("handyWorker1");
+
 		created = this.handyworkerService.findAll().iterator().next();
 		System.out.println(created);
 		copyCreated = this.copyHandyWorker(created);
