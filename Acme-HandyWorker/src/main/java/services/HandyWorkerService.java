@@ -71,7 +71,7 @@ public class HandyWorkerService {
 		authority.setAuthority("HANDYWORKER");
 		Assert.notNull(handyWorker, "handyWorker.not.null");
 
-		if (handyWorker.getId() != 0) {
+		if (this.exists(handyWorker.getId())) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
 			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");

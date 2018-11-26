@@ -68,7 +68,7 @@ public class CustomerService {
 		authority.setAuthority("CUSTOMER");
 		Assert.notNull(customer, "customer.not.null");
 
-		if (customer.getId() != 0) {
+		if (this.exists(customer.getId())) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
 			Assert.isTrue(logedUserAccount.equals(customer.getUserAccount()), "customer.notEqual.userAccount");
