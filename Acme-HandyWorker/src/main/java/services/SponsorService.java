@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -9,11 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Box;
+import domain.SocialIdentity;
+import domain.Sponsor;
+import domain.Sponsorship;
 import repositories.SponsorRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Sponsor;
 
 @Service
 @Transactional
@@ -56,12 +60,14 @@ public class SponsorService {
 	public Sponsor save(final Sponsor sponsor) {
 		Sponsor result, saved;
 		final UserAccount logedUserAccount;
-		Authority authority;
+		Authority authority, authority2;
 		Md5PasswordEncoder encoder;
 
 		encoder = new Md5PasswordEncoder();
 		authority = new Authority();
 		authority.setAuthority("SPONSOR");
+		authority2 = new Authority();
+		authority2.setAuthority("ADMINISTRADOR");
 		Assert.notNull(sponsor, "sponsor.not.null");
 
 		if (this.exists(sponsor.getId())) {
@@ -75,7 +81,10 @@ public class SponsorService {
 			Assert.isTrue(sponsor.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && sponsor.isSuspicious() == saved.isSuspicious(), "sponsor.notEqual.accountOrSuspicious");
 
 		} else {
-			Assert.isTrue(sponsor.isSuspicious() == false, "sponsor.notSuspicious.false");
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "admin.notLogged ");
+			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "admin.notEqual.userAccount");
+			Assert.isTrue(sponsor.isSuspicious() == false, "admin.notSuspicious.false");
 			sponsor.getUserAccount().setPassword(encoder.encodePassword(sponsor.getUserAccount().getPassword(), null));
 			sponsor.getUserAccount().setEnabled(true);
 
@@ -103,6 +112,12 @@ public class SponsorService {
 		userAccount.addAuthority(authority);
 		userAccount.setEnabled(true);
 
+		final Collection<Box> boxes = new LinkedList<>();
+		result.setBoxes(boxes);
+		final Collection<Sponsorship> sponsorships = new LinkedList<>();
+		result.setSponsorships(sponsorships);
+		final Collection<SocialIdentity> socialIdentities = new LinkedList<>();
+		result.setSocialIdentity(socialIdentities);
 		result.setUserAccount(userAccount);
 
 		return result;

@@ -15,6 +15,7 @@ import repositories.AdministratorRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import security.UserAccountRepository;
 import domain.Actor;
 import domain.Administrator;
 
@@ -29,6 +30,9 @@ public class AdministratorService {
 
 	@Autowired
 	private ActorRepository			actorRepository;
+	
+	@Autowired
+	LoginService loginservice;
 
 
 	// Supporting services ----------------------------------------------------
@@ -126,6 +130,13 @@ public class AdministratorService {
 		Assert.notNull(administrator);
 		Assert.isTrue(this.administratorRepository.exists(administrator.getId()));
 		this.administratorRepository.delete(administrator);
+	}
+	
+	public UserAccount changeEnabledActor(UserAccount userAccount) {
+		Assert.notNull(userAccount);
+		
+		userAccount.setEnabled(!userAccount.isEnabled());
+		return this.loginservice.save(userAccount);
 	}
 
 }

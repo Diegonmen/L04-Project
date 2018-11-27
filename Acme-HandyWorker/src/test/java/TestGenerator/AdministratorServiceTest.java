@@ -12,9 +12,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import services.AdministratorService;
-import utilities.AbstractTest;
 import domain.Administrator;
+import domain.Customer;
+import security.UserAccount;
+import services.AdministratorService;
+import services.CustomerService;
+import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
 	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
@@ -25,6 +28,9 @@ public class AdministratorServiceTest extends AbstractTest {
 
 	@Autowired
 	private AdministratorService	administratorService;
+	
+	@Autowired
+	private CustomerService	customerService;
 
 
 	@Test
@@ -82,6 +88,17 @@ public class AdministratorServiceTest extends AbstractTest {
 		Assert.isNull(administrator.getMiddleName());
 		Assert.isNull(administrator.getSurname());
 	}
+	
+	@Test
+	public void testChangeEnabledActor() {
+		Customer customer = customerService.findAll().iterator().next();
+		
+		boolean isEnabled = customer.getUserAccount().isEnabled();
+		
+		UserAccount account = this.administratorService.changeEnabledActor(customer.getUserAccount());
+
+		Assert.isTrue(isEnabled != account.isEnabled());
+	}
 
 	private Administrator copyAdministrator(final Administrator administrator) {
 		Administrator result;
@@ -100,6 +117,29 @@ public class AdministratorServiceTest extends AbstractTest {
 		result.setSuspicious(administrator.isSuspicious());
 		result.setUserAccount(administrator.getUserAccount());
 		result.setVersion(administrator.getVersion());
+
+		return result;
+	}
+	
+	private Customer copyCustomer(final Customer customer) {
+		Customer result;
+
+		result = new Customer();
+		result.setAddress(customer.getAddress());
+		result.setEmail(customer.getEmail());
+		result.setId(customer.getId());
+		result.setName(customer.getName());
+		result.setMiddleName(customer.getMiddleName());
+		result.setPhoneNumber(customer.getPhoneNumber());
+		result.setSurname(customer.getSurname());
+		result.setBoxes(customer.getBoxes());
+		result.setComplaints(customer.getComplaints());
+		result.setPhoto(customer.getPhoto());
+		result.setSocialIdentity(customer.getSocialIdentity());
+		result.setEndorsements(customer.getEndorsements());
+		result.setSuspicious(customer.isSuspicious());
+		result.setUserAccount(customer.getUserAccount());
+		result.setVersion(customer.getVersion());
 
 		return result;
 	}

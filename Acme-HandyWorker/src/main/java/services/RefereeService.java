@@ -84,8 +84,8 @@ public class RefereeService {
 		} else {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "admin.notLogged ");
-			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "referee.notEqual.userAccount");
-			Assert.isTrue(referee.isSuspicious() == false, "referee.notSuspicious.false");
+			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "admin.notEqual.userAccount");
+			Assert.isTrue(referee.isSuspicious() == false, "admin.notSuspicious.false");
 			referee.getUserAccount().setPassword(encoder.encodePassword(referee.getUserAccount().getPassword(), null));
 			referee.getUserAccount().setEnabled(true);
 
@@ -102,19 +102,15 @@ public class RefereeService {
 		Referee result;
 		UserAccount userAccount;
 		Authority authority1;
-		Authority authority2;
 
 		result = new Referee();
 		userAccount = new UserAccount();
 		authority1 = new Authority();
-		authority2 = new Authority();
 
 		result.setSuspicious(false);
 
 		authority1.setAuthority("REFEREE");
-		authority2.setAuthority("ADMINISTRATOR");
 		userAccount.addAuthority(authority1);
-		userAccount.addAuthority(authority2);
 		userAccount.setEnabled(true);
 
 		final Collection<Box> boxes = new LinkedList<>();

@@ -33,6 +33,8 @@ public class LoginService implements UserDetailsService {
 
 	// Business methods -------------------------------------------------------
 
+	
+	
 	@Override
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 		Assert.notNull(username);
@@ -46,6 +48,10 @@ public class LoginService implements UserDetailsService {
 		result.getAuthorities().size();
 
 		return result;
+	}
+
+	public UserAccount save(UserAccount entity) {
+		return userRepository.save(entity);
 	}
 
 	public static UserAccount getPrincipal() {
