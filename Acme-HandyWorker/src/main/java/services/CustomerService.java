@@ -126,4 +126,11 @@ public class CustomerService {
 		return res;
 	}
 
+	public Customer findByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+		Assert.isTrue(userAccount.getId() != 0);
+		final Customer res = this.customerRepository.findByUserAccountId(userAccount.getId());
+		return res;
+	}
+
 }
