@@ -37,10 +37,12 @@ public class FixUpTaskService {
 
 	public Collection<FixUpTask> findAll() {
 		Collection<FixUpTask> result;
-		final Authority authority;
+		final Authority authority, authority2;
 		final UserAccount logedUserAccount;
 		authority = new Authority();
 		authority.setAuthority("HANDYWORKER");
+		authority2 = new Authority();
+		authority2.setAuthority("CUSTOMER");
 		logedUserAccount = LoginService.getPrincipal();
 		Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
 		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
@@ -71,10 +73,17 @@ public class FixUpTaskService {
 		authority = new Authority();
 		authority.setAuthority("CUSTOMER");
 		logedUserAccount = LoginService.getPrincipal();
+		
+		System.out.println(logedUserAccount);
+		
+		
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		
 		result = this.fixUpTaskRepository.findOne(fixUpTaskId);
 		Assert.notNull(result);
-		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
 		Assert.isTrue(this.customerService.findCustomerByFixUpTask(result).getUserAccount().equals(logedUserAccount));
+		
+		
 		return result;
 	}
 
