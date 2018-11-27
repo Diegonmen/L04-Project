@@ -34,7 +34,7 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		HandyWorker copyCreated;
 
 		created = this.handyworkerService.findAll().iterator().next();
-		this.authenticate(created.getUserAccount().getUsername());
+		System.out.println(created);
 		copyCreated = this.copyHandyWorker(created);
 		copyCreated.setName("TestHandyWorker");
 		saved = this.handyworkerService.save(copyCreated);

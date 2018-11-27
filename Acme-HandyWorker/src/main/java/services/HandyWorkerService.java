@@ -71,11 +71,12 @@ public class HandyWorkerService {
 		authority.setAuthority("HANDYWORKER");
 		Assert.notNull(handyWorker, "handyWorker.not.null");
 
-		if (this.exists(handyWorker.getId())) {
+		if (handyWorker.getId() != 0) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "handyWorker.notLogged");
 			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
 			saved = this.handyWorkerRepository.findOne(handyWorker.getId());
+			System.out.println(saved);
 			Assert.notNull(saved, "handyWorker.not.null");
 			Assert.isTrue(saved.getUserAccount().getUsername().equals(handyWorker.getUserAccount().getUsername()), "handyWorker.notEqual.username");
 			Assert.isTrue(handyWorker.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "handyWorker.notEqual.password");
