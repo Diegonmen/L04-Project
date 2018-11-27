@@ -18,4 +18,7 @@ public interface FixUpTaskRepository extends JpaRepository<FixUpTask, Integer> {
 	@Query("select c.fixUpTasks from Customer c where c.id = ?1")
 	Collection<FixUpTask> findFixUpTasksByCustomer(int customerId);
 
+	@Query("select (count(f) * 1.0 / (select count(fi) from FixUpTask fi)) from FixUpTask f where f.complaints.size!=0")
+	Double ratioFixUpTasksWithComplaints();
+
 }

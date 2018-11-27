@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -13,7 +14,10 @@ import repositories.RefereeRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Box;
 import domain.Referee;
+import domain.Report;
+import domain.SocialIdentity;
 
 @Service
 @Transactional
@@ -56,12 +60,15 @@ public class RefereeService {
 	public Referee save(final Referee referee) {
 		Referee result, saved;
 		final UserAccount logedUserAccount;
-		Authority authority;
+		Authority authority1;
+		Authority authority2;
 		Md5PasswordEncoder encoder;
 
 		encoder = new Md5PasswordEncoder();
-		authority = new Authority();
-		authority.setAuthority("REFEREE");
+		authority1 = new Authority();
+		authority1.setAuthority("REFEREE");
+		authority2 = new Authority();
+		authority2.setAuthority("ADMINISTRATOR");
 		Assert.notNull(referee, "referee.not.null");
 
 		if (this.exists(referee.getId())) {
@@ -75,6 +82,9 @@ public class RefereeService {
 			Assert.isTrue(referee.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && referee.isSuspicious() == saved.isSuspicious(), "referee.notEqual.accountOrSuspicious");
 
 		} else {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "admin.notLogged ");
+			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "referee.notEqual.userAccount");
 			Assert.isTrue(referee.isSuspicious() == false, "referee.notSuspicious.false");
 			referee.getUserAccount().setPassword(encoder.encodePassword(referee.getUserAccount().getPassword(), null));
 			referee.getUserAccount().setEnabled(true);
@@ -91,18 +101,28 @@ public class RefereeService {
 
 		Referee result;
 		UserAccount userAccount;
-		Authority authority;
+		Authority authority1;
+		Authority authority2;
 
 		result = new Referee();
 		userAccount = new UserAccount();
-		authority = new Authority();
+		authority1 = new Authority();
+		authority2 = new Authority();
 
 		result.setSuspicious(false);
 
-		authority.setAuthority("REFEREE");
-		userAccount.addAuthority(authority);
+		authority1.setAuthority("REFEREE");
+		authority2.setAuthority("ADMINISTRATOR");
+		userAccount.addAuthority(authority1);
+		userAccount.addAuthority(authority2);
 		userAccount.setEnabled(true);
 
+		final Collection<Box> boxes = new LinkedList<>();
+		result.setBoxes(boxes);
+		final Collection<Report> reports = new LinkedList<>();
+		result.setReports(reports);
+		final Collection<SocialIdentity> socialIdentities = new LinkedList<>();
+		result.setSocialIdentity(socialIdentities);
 		result.setUserAccount(userAccount);
 
 		return result;

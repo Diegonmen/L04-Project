@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -9,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import repositories.ActorRepository;
 import repositories.AdministratorRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
+import domain.Actor;
 import domain.Administrator;
 
 @Service
@@ -23,6 +26,9 @@ public class AdministratorService {
 
 	@Autowired
 	private AdministratorRepository	administratorRepository;
+
+	@Autowired
+	private ActorRepository			actorRepository;
 
 
 	// Supporting services ----------------------------------------------------
@@ -36,6 +42,13 @@ public class AdministratorService {
 		Assert.notNull(result);
 
 		return result;
+	}
+
+	public Collection<Actor> findSuspiciousActor() {
+		final Collection<Actor> actors = new LinkedList<>();
+		actors.addAll(this.actorRepository.findSuspiciousActor());
+		return actors;
+
 	}
 
 	public boolean exists(final Integer arg0) {
