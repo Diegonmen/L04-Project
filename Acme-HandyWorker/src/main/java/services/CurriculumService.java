@@ -35,14 +35,12 @@ public class CurriculumService {
 
 	public Curriculum create() {
 
-		Curriculum res = new Curriculum();
-		String ticker = "";
-		PersonalRecord personalRecord = personalRecordService.create();
-		Collection<MiscellaneousRecord> miscellaneousRecords = new ArrayList<>();
-		Collection<EndorserRecord> endorserRecords = new ArrayList<>();
-		Collection<EducationRecord> educationRecords = new ArrayList<>();
-		Collection<ProfessionalRecord> professionalRecords = new ArrayList<>();
-		res.setTicker(ticker);
+		final Curriculum res = new Curriculum();
+		final PersonalRecord personalRecord = this.personalRecordService.create();
+		final Collection<MiscellaneousRecord> miscellaneousRecords = new ArrayList<>();
+		final Collection<EndorserRecord> endorserRecords = new ArrayList<>();
+		final Collection<EducationRecord> educationRecords = new ArrayList<>();
+		final Collection<ProfessionalRecord> professionalRecords = new ArrayList<>();
 		res.setPersonalRecord(personalRecord);
 		res.setMiscellaneousRecords(miscellaneousRecords);
 		res.setEndorserRecords(endorserRecords);
