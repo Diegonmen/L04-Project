@@ -73,7 +73,7 @@ public class HandyWorkerService {
 
 		if (this.exists(handyWorker.getId())) {
 			logedUserAccount = LoginService.getPrincipal();
-			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
+			Assert.notNull(logedUserAccount, "handyWorker.notLogged");
 			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
 			saved = this.handyWorkerRepository.findOne(handyWorker.getId());
 			Assert.notNull(saved, "handyWorker.not.null");

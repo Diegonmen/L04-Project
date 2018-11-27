@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 import services.CustomerService;
 import utilities.AbstractTest;
 import domain.Customer;
+import domain.HandyWorker;
 
 @ContextConfiguration(locations = {
 	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
