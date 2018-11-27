@@ -20,19 +20,17 @@ import domain.Application;
 import domain.CreditCard;
 import domain.Customer;
 
-@ContextConfiguration(locations = {
-	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
-})
+@ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
+		"classpath:spring/config/packages.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class ApplicationServiceTest extends AbstractTest {
 
 	@Autowired
-	private ApplicationService	applicationService;
+	private ApplicationService applicationService;
 
 	@Autowired
-	private CustomerService		customerService;
-
+	private CustomerService customerService;
 
 	@Test
 	public void saveApplicationTest() {
@@ -43,7 +41,7 @@ public class ApplicationServiceTest extends AbstractTest {
 		super.authenticate("customer1");
 
 		customer = this.customerService.findCustomerByUserAccount(LoginService.getPrincipal());
-		for (final Application a : this.applicationService.findApplicationsByCustomer(customer))
+		for (final Application a : this.applicationService.findApplicationsByCustomer(customer)) {
 			if (a.getStatus().equals("PENDING")) {
 				created = a;
 				copyCreated = created;
@@ -62,7 +60,10 @@ public class ApplicationServiceTest extends AbstractTest {
 				Assert.isTrue(this.applicationService.findAll().contains(saved));
 				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
 			}
+		}
+
 	}
+
 	@Test
 	public void findAllApplicationTest() {
 		Collection<Application> result;

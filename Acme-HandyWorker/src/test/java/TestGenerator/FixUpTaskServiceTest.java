@@ -12,11 +12,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import domain.Customer;
+import domain.FixUpTask;
 import services.CustomerService;
 import services.FixUpTaskService;
 import utilities.AbstractTest;
-import domain.Customer;
-import domain.FixUpTask;
 
 @ContextConfiguration(locations = {
 	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
@@ -27,7 +27,6 @@ public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Autowired
 	private FixUpTaskService	fixuptaskService;
-
 	@Autowired
 	private CustomerService		customerService;
 
@@ -40,10 +39,10 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		created = this.fixuptaskService.findAll().iterator().next();
 		this.authenticate(this.customerService.findCustomerByFixUpTask(created).getUserAccount().getUsername());
 		copyCreated = this.copyFixUpTask(created);
-		copyCreated.setDescription("TestFixUpTask");
+		copyCreated.setDescription("Test");
 		saved = this.fixuptaskService.save(copyCreated);
 		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
-		Assert.isTrue(saved.getDescription().equals("TestFixUpTask"));
+		Assert.isTrue(saved.getDescription().equals("Test"));
 	}
 
 	@Test
@@ -57,7 +56,9 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	@Test
 	public void findOneFixUpTaskTest() {
 		FixUpTask result;
+		
 		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
+		
 		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
 		Assert.isTrue(fixuptask.getId() != 0);
 		Assert.isTrue(this.fixuptaskService.exists(fixuptask.getId()));

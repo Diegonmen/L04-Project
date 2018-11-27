@@ -138,6 +138,7 @@ public class CustomerService {
 		Assert.notNull(fixUpTask);
 		Assert.isTrue(fixUpTask.getId() != 0);
 		final Customer res = this.customerRepository.findCustomerByFixUpTaskId(fixUpTask.getId());
+		
 		return res;
 	}
 }
