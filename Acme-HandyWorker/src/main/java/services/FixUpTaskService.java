@@ -8,9 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import repositories.FixUpTaskRepository;
+import security.Authority;
+import security.LoginService;
+import security.UserAccount;
 import domain.Customer;
 import domain.FixUpTask;
-import repositories.FixUpTaskRepository;
+import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -19,68 +23,101 @@ public class FixUpTaskService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private FixUpTaskRepository fixUpTaskRepository;
+	private FixUpTaskRepository	fixUpTaskRepository;
 
 	// Supporting services ----------------------------------------------------
 
 	@Autowired
-	private CustomerService customerService;
-	
+	private CustomerService		customerService;
+
+	@Autowired
+	private HandyWorkerService	handyWorkerService;
+
+
 	// Simple CRUD methods ----------------------------------------------------
 
 	public Collection<FixUpTask> findAll() {
 		Collection<FixUpTask> result;
-
-		result = fixUpTaskRepository.findAll();
+		final Authority authority;
+		final UserAccount logedUserAccount;
+		authority = new Authority();
+		authority.setAuthority("HANDYWORKER");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority) || logedUserAccount.getAuthorities().contains("CUSTOMER"));
+		result = this.fixUpTaskRepository.findAll();
 		Assert.notNull(result);
-
 		return result;
 	}
 
 	public FixUpTask findOne(final int fixUpTaskId) {
 		Assert.isTrue(fixUpTaskId != 0);
-
+		final UserAccount logedUserAccount;
+		Authority authority;
 		FixUpTask result;
-
-		result = fixUpTaskRepository.findOne(fixUpTaskId);
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+		result = this.fixUpTaskRepository.findOne(fixUpTaskId);
 		Assert.notNull(result);
-
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		Assert.isTrue(this.customerService.findCustomerByFixUpTask(result).getUserAccount().equals(logedUserAccount));
 		return result;
 	}
 
 	public FixUpTask save(final FixUpTask fixUpTask) {
-		Assert.notNull(fixUpTask);
-		Assert.isTrue(fixUpTask.getId() != 0);
+		FixUpTask result, saved;
+		final UserAccount logedUserAccount;
+		Authority authority;
 
-		FixUpTask result;
+		authority = new Authority();
+		authority.setAuthority("HANDYWORKER");
+		Assert.notNull(fixUpTask, "fixUpTask.not.null");
+		final HandyWorker handyWorker = this.handyWorkerService.findByFixUpTask(fixUpTask);
 
-		result = fixUpTaskRepository.save(fixUpTask);
+		if (this.exists(fixUpTask.getId())) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
+			saved = this.fixUpTaskRepository.findOne(fixUpTask.getId());
+			Assert.notNull(saved, "fixUpTask.not.null");
+			Assert.isTrue(handyWorker.getUserAccount().isAccountNonLocked() && handyWorker.isSuspicious(), "handyWorker.notEqual.accountOrSuspicious");
+			result = this.fixUpTaskRepository.save(saved);
 
+		} else {
+			result = this.fixUpTaskRepository.save(fixUpTask);
+			Assert.notNull(result);
+		}
 		return result;
+
 	}
 
 	public void delete(final FixUpTask fixUpTask) {
-		Assert.notNull(fixUpTask);
 		Assert.isTrue(fixUpTask.getId() != 0);
-		Assert.isTrue(fixUpTaskRepository.exists(fixUpTask.getId()));
-
-		fixUpTaskRepository.delete(fixUpTask);
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		Assert.isTrue(this.customerService.findCustomerByFixUpTask(fixUpTask).getUserAccount().equals(logedUserAccount));
+		this.fixUpTaskRepository.delete(fixUpTask);
 	}
 
-	public boolean exists(Integer id) {
-		return fixUpTaskRepository.exists(id);
+	public boolean exists(final Integer id) {
+		return this.fixUpTaskRepository.exists(id);
 	}
-	
+
 	//Other business methods
-	
-		public Collection<FixUpTask> findByCustomer(Customer customer) {
-			Assert.notNull(customer);
-			Assert.isTrue(customerService.exists(customer.getId()));
-			
-			Collection<FixUpTask> result;
-			result = this.fixUpTaskRepository.findFixUpTasksByCustomer(customer.getId());
-			
-			return result;
-		}
+
+	public Collection<FixUpTask> findByCustomer(final Customer customer) {
+		Assert.notNull(customer);
+		Assert.isTrue(this.customerService.exists(customer.getId()));
+
+		Collection<FixUpTask> result;
+		result = this.fixUpTaskRepository.findFixUpTasksByCustomer(customer.getId());
+
+		return result;
+	}
 
 }

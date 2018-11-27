@@ -1,3 +1,4 @@
+
 package TestGenerator;
 
 import java.util.Collection;
@@ -11,68 +12,97 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import domain.Customer;
-import domain.FixUpTask;
 import services.CustomerService;
 import services.FixUpTaskService;
 import utilities.AbstractTest;
+import domain.Customer;
+import domain.FixUpTask;
 
-@ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
-		"classpath:spring/config/packages.xml" })
+@ContextConfiguration(locations = {
+	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
+})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Autowired
-	private FixUpTaskService fixuptaskService;
-	
+	private FixUpTaskService	fixuptaskService;
+
 	@Autowired
-	private CustomerService customerService;
+	private CustomerService		customerService;
+
 
 	@Test
 	public void saveFixUpTaskTest() {
-		FixUpTask fixuptask, saved;
-		Collection<FixUpTask> fixuptasks;
-		fixuptask = fixuptaskService.findAll().iterator().next();
-		fixuptask.setVersion(57);
-		saved = fixuptaskService.save(fixuptask);
-		fixuptasks = fixuptaskService.findAll();
-		Assert.isTrue(fixuptasks.contains(saved));
+		final FixUpTask created;
+		final FixUpTask saved;
+		final FixUpTask copyCreated;
+		created = this.fixuptaskService.findAll().iterator().next();
+		this.authenticate(this.customerService.findCustomerByFixUpTask(created).getUserAccount().getUsername());
+		copyCreated = this.copyFixUpTask(created);
+		copyCreated.setDescription("TestFixUpTask");
+		saved = this.fixuptaskService.save(copyCreated);
+		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
+		Assert.isTrue(saved.getDescription().equals("TestFixUpTask"));
 	}
 
 	@Test
 	public void findAllFixUpTaskTest() {
+		this.authenticate("handyWorker1");
 		Collection<FixUpTask> result;
-		result = fixuptaskService.findAll();
+		result = this.fixuptaskService.findAll();
 		Assert.notNull(result);
 	}
 
 	@Test
 	public void findOneFixUpTaskTest() {
-		FixUpTask fixuptask = fixuptaskService.findAll().iterator().next();
-		int fixuptaskId = fixuptask.getId();
-		Assert.isTrue(fixuptaskId != 0);
 		FixUpTask result;
-		result = fixuptaskService.findOne(fixuptaskId);
+		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
+		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
+		Assert.isTrue(fixuptask.getId() != 0);
+		Assert.isTrue(this.fixuptaskService.exists(fixuptask.getId()));
+		result = this.fixuptaskService.findOne(fixuptask.getId());
 		Assert.notNull(result);
 	}
 
 	@Test
 	public void deleteFixUpTaskTest() {
-		FixUpTask fixuptask = fixuptaskService.findAll().iterator().next();
+		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
+		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
 		Assert.notNull(fixuptask);
 		Assert.isTrue(fixuptask.getId() != 0);
 		Assert.isTrue(this.fixuptaskService.exists(fixuptask.getId()));
 		this.fixuptaskService.delete(fixuptask);
 	}
-	
+
 	@Test
-	public void findFixUpTasksByCustomerTest(){
+	public void findFixUpTasksByCustomerTest() {
 		Collection<FixUpTask> fixUpTasks;
-		Customer customer = customerService.findAll().iterator().next();
+		final Customer customer = this.customerService.findAll().iterator().next();
 		Assert.notNull(customer);
-		fixUpTasks = fixuptaskService.findByCustomer(customer);
+		fixUpTasks = this.fixuptaskService.findByCustomer(customer);
 		Assert.notNull(fixUpTasks);
+	}
+
+	private FixUpTask copyFixUpTask(final FixUpTask fixUpTask) {
+		FixUpTask result;
+
+		result = new FixUpTask();
+		result.setAddress(fixUpTask.getAddress());
+		result.setApplications(fixUpTask.getApplications());
+		result.setCategory(fixUpTask.getCategory());
+		result.setComplaints(fixUpTask.getComplaints());
+		result.setDescription(fixUpTask.getDescription());
+		result.setEndDate(fixUpTask.getEndDate());
+		result.setMaxPrice(fixUpTask.getMaxPrice());
+		result.setId(fixUpTask.getId());
+		result.setPhases(fixUpTask.getPhases());
+		result.setPublicationMoment(fixUpTask.getPublicationMoment());
+		result.setStartDate(fixUpTask.getStartDate());
+		result.setTicker(fixUpTask.getTicker());
+		result.setWarranty(fixUpTask.getWarranty());
+		result.setVersion(fixUpTask.getVersion());
+		return result;
 	}
 
 }

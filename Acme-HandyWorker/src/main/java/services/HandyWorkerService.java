@@ -14,6 +14,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Application;
+import domain.FixUpTask;
 import domain.HandyWorker;
 
 @Service
@@ -71,12 +72,11 @@ public class HandyWorkerService {
 		authority.setAuthority("HANDYWORKER");
 		Assert.notNull(handyWorker, "handyWorker.not.null");
 
-		if (handyWorker.getId() != 0) {
+		if (this.exists(handyWorker.getId())) {
 			logedUserAccount = LoginService.getPrincipal();
-			Assert.notNull(logedUserAccount, "handyWorker.notLogged");
+			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
 			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
 			saved = this.handyWorkerRepository.findOne(handyWorker.getId());
-			System.out.println(saved);
 			Assert.notNull(saved, "handyWorker.not.null");
 			Assert.isTrue(saved.getUserAccount().getUsername().equals(handyWorker.getUserAccount().getUsername()), "handyWorker.notEqual.username");
 			Assert.isTrue(handyWorker.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "handyWorker.notEqual.password");
@@ -122,7 +122,7 @@ public class HandyWorkerService {
 		this.handyWorkerRepository.delete(handyWorker);
 	}
 
-	public HandyWorker findByUserAccountId(final int userAccountId) {
+	public HandyWorker findByUserAccount(final int userAccountId) {
 		HandyWorker result;
 
 		Assert.isTrue(userAccountId != 0);
@@ -132,7 +132,7 @@ public class HandyWorkerService {
 		return result;
 	}
 
-	public HandyWorker findByApplicationId(final Application application) {
+	public HandyWorker findByApplication(final Application application) {
 		HandyWorker result;
 
 		Assert.notNull(application);
@@ -143,4 +143,11 @@ public class HandyWorkerService {
 		return result;
 	}
 
+	public HandyWorker findByFixUpTask(final FixUpTask fixUpTask) {
+		HandyWorker result;
+		Assert.notNull(fixUpTask);
+		Assert.isTrue(fixUpTask.getId() != 0);
+		result = this.handyWorkerRepository.findByFixUpTaskId(fixUpTask.getId());
+		return result;
+	}
 }

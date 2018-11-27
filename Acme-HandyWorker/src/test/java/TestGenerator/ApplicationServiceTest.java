@@ -1,3 +1,4 @@
+
 package TestGenerator;
 
 import java.util.Collection;
@@ -11,18 +12,27 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import domain.Application;
+import security.LoginService;
 import services.ApplicationService;
+import services.CustomerService;
 import utilities.AbstractTest;
+import domain.Application;
+import domain.CreditCard;
+import domain.Customer;
 
-@ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
-		"classpath:spring/config/packages.xml" })
+@ContextConfiguration(locations = {
+	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
+})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class ApplicationServiceTest extends AbstractTest {
 
 	@Autowired
-	private ApplicationService applicationService;
+	private ApplicationService	applicationService;
+
+	@Autowired
+	private CustomerService		customerService;
+
 
 	@Test
 	public void saveApplicationTest() {
@@ -55,27 +65,26 @@ public class ApplicationServiceTest extends AbstractTest {
 		}
 
 	}
-
 	@Test
 	public void findAllApplicationTest() {
 		Collection<Application> result;
-		result = applicationService.findAll();
+		result = this.applicationService.findAll();
 		Assert.notNull(result);
 	}
 
 	@Test
 	public void findOneApplicationTest() {
-		Application application = applicationService.findAll().iterator().next();
-		int applicationId = application.getId();
+		final Application application = this.applicationService.findAll().iterator().next();
+		final int applicationId = application.getId();
 		Assert.isTrue(applicationId != 0);
 		Application result;
-		result = applicationService.findOne(applicationId);
+		result = this.applicationService.findOne(applicationId);
 		Assert.notNull(result);
 	}
 
 	@Test
 	public void deleteApplicationTest() {
-		Application application = applicationService.findAll().iterator().next();
+		final Application application = this.applicationService.findAll().iterator().next();
 		Assert.notNull(application);
 		Assert.isTrue(application.getId() != 0);
 		Assert.isTrue(this.applicationService.exists(application.getId()));

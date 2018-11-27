@@ -16,4 +16,7 @@ public interface HandyWorkerRepository extends JpaRepository<HandyWorker, Intege
 	@Query("select a from HandyWorker a where a.userAccount.id = ?1")
 	HandyWorker findByUserAccountId(int userAccountId);
 
+	@Query("select a.handyWorker from Application a join a.fixUpTask f where f.id = ?1")
+	HandyWorker findByFixUpTaskId(int fixUpTaskId);
+
 }
