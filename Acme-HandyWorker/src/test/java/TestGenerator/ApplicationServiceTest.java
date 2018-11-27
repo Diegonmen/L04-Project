@@ -26,13 +26,34 @@ public class ApplicationServiceTest extends AbstractTest {
 
 	@Test
 	public void saveApplicationTest() {
-		Application application, saved;
-		Collection<Application> applications;
-		application = applicationService.findAll().iterator().next();
-		application.setVersion(57);
-		saved = applicationService.save(application);
-		applications = applicationService.findAll();
-		Assert.isTrue(applications.contains(saved));
+		Application created;
+		Application saved;
+		Application copyCreated;
+		Customer customer;
+		super.authenticate("customer1");
+
+		customer = this.customerService.findByUserAccount(LoginService.getPrincipal());
+		for (final Application a : this.applicationService.findApplicationsByCustomer(customer)) {
+			if (a.getStatus().equals("PENDING")) {
+				created = a;
+				copyCreated = created;
+				copyCreated.setStatus("ACCEPTED");
+				final String comment = "Comentario";
+				copyCreated.getComments().add(comment);
+				final CreditCard creditCard = new CreditCard();
+				creditCard.setBrandName("VISA");
+				creditCard.setCVV(123);
+				creditCard.setExpirationMonth(12);
+				creditCard.setExpirationYear(2020);
+				creditCard.setHolderName("Paco Asencio");
+				creditCard.setNumber("1234567812345678");
+				copyCreated.setCreditCard(creditCard);
+				saved = this.applicationService.save(copyCreated);
+				Assert.isTrue(this.applicationService.findAll().contains(saved));
+				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
+			}
+		}
+
 	}
 
 	@Test
