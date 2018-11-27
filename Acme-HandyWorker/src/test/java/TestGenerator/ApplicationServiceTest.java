@@ -42,8 +42,8 @@ public class ApplicationServiceTest extends AbstractTest {
 		Customer customer;
 		super.authenticate("customer1");
 
-		customer = this.customerService.findCustomerByUserAccount(LoginService.getPrincipal());
-		for (final Application a : this.applicationService.findApplicationsByCustomer(customer))
+		customer = this.customerService.findByUserAccount(LoginService.getPrincipal());
+		for (final Application a : this.applicationService.findApplicationsByCustomer(customer)) {
 			if (a.getStatus().equals("PENDING")) {
 				created = a;
 				copyCreated = created;
@@ -62,6 +62,8 @@ public class ApplicationServiceTest extends AbstractTest {
 				Assert.isTrue(this.applicationService.findAll().contains(saved));
 				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
 			}
+		}
+
 	}
 	@Test
 	public void findAllApplicationTest() {
