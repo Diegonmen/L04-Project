@@ -40,10 +40,10 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		created = this.fixuptaskService.findAll().iterator().next();
 		this.authenticate(this.customerService.findCustomerByFixUpTask(created).getUserAccount().getUsername());
 		copyCreated = this.copyFixUpTask(created);
-		copyCreated.setDescription("TestFixUpTask");
+		copyCreated.setDescription("Test");
 		saved = this.fixuptaskService.save(copyCreated);
-		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
-		Assert.isTrue(saved.getDescription().equals("TestFixUpTask"));
+		Assert.isTrue(this.fixuptaskService.findAllCustomer().contains(saved));
+		Assert.isTrue(saved.getDescription().equals("Test"));
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	@Test
 	public void findOneFixUpTaskTest() {
 		FixUpTask result;
-		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
+		final FixUpTask fixuptask = this.fixuptaskService.findAllCustomer().iterator().next();
 		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
 		Assert.isTrue(fixuptask.getId() != 0);
 		Assert.isTrue(this.fixuptaskService.exists(fixuptask.getId()));
@@ -67,7 +67,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Test
 	public void deleteFixUpTaskTest() {
-		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
+		final FixUpTask fixuptask = this.fixuptaskService.findAllCustomer().iterator().next();
 		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
 		Assert.notNull(fixuptask);
 		Assert.isTrue(fixuptask.getId() != 0);

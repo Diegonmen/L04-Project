@@ -14,7 +14,6 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Customer;
 import domain.FixUpTask;
-import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -44,7 +43,21 @@ public class FixUpTaskService {
 		authority.setAuthority("HANDYWORKER");
 		logedUserAccount = LoginService.getPrincipal();
 		Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
-		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority) || logedUserAccount.getAuthorities().contains("CUSTOMER"));
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		result = this.fixUpTaskRepository.findAll();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Collection<FixUpTask> findAllCustomer() {
+		Collection<FixUpTask> result;
+		final Authority authority;
+		final UserAccount logedUserAccount;
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.notNull(logedUserAccount, "customer.notLogged ");
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
 		result = this.fixUpTaskRepository.findAll();
 		Assert.notNull(result);
 		return result;
@@ -71,18 +84,19 @@ public class FixUpTaskService {
 		Authority authority;
 
 		authority = new Authority();
-		authority.setAuthority("HANDYWORKER");
+		authority.setAuthority("CUSTOMER");
 		Assert.notNull(fixUpTask, "fixUpTask.not.null");
-		final HandyWorker handyWorker = this.handyWorkerService.findByFixUpTask(fixUpTask);
+		final Customer customer = this.customerService.findCustomerByFixUpTask(fixUpTask);
 
 		if (this.exists(fixUpTask.getId())) {
 			logedUserAccount = LoginService.getPrincipal();
-			Assert.notNull(logedUserAccount, "handyWorker.notLogged ");
-			Assert.isTrue(logedUserAccount.equals(handyWorker.getUserAccount()), "handyWorker.notEqual.userAccount");
+			Assert.notNull(logedUserAccount, "customer.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(customer.getUserAccount()), "customer.notEqual.userAccount");
 			saved = this.fixUpTaskRepository.findOne(fixUpTask.getId());
 			Assert.notNull(saved, "fixUpTask.not.null");
-			Assert.isTrue(handyWorker.getUserAccount().isAccountNonLocked() && handyWorker.isSuspicious(), "handyWorker.notEqual.accountOrSuspicious");
-			result = this.fixUpTaskRepository.save(saved);
+			Assert.isTrue(customer.getUserAccount().isAccountNonLocked() && !(customer.isSuspicious()), "customer.notEqual.accountOrSuspicious");
+			result = this.fixUpTaskRepository.save(fixUpTask);
+			Assert.notNull(result);
 
 		} else {
 			result = this.fixUpTaskRepository.save(fixUpTask);
