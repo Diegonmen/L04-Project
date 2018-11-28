@@ -2004,6 +2004,17 @@
 		</property>
 	</bean>
 	
+	<bean id="complaint11" class="domain.Complaint">
+		<property name="ticker" value="992735-149727" />
+		<property name="moment" value="2018/11/13 13:42" />
+		<property name="description" value="description11" />
+		<property name="attachments">
+			<list>
+				<value>https://www.sample.com</value>
+			</list>
+		</property>
+	</bean>
+	
 	<!-- Reports -->
 
 	<bean id="report0" class="domain.Report">
@@ -2055,8 +2066,8 @@
 		</property>
 		<property name="complaints">
 			<list>
-				<ref bean="complaint2" />
-				<ref bean="complaint3" />
+				<ref bean="complaint2"/>
+				<ref bean="complaint3"/>
 			</list>
 		</property>
 		<property name="notes">
@@ -2938,6 +2949,7 @@
 		<property name="complaints">
 			<list>
 				<ref bean="complaint10"/>
+				<ref bean="complaint11"/>
 			</list>
 		</property>
 	</bean>
