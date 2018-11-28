@@ -22,7 +22,6 @@ public class FinderService {
 	@Autowired
 	private FinderRepository	finderRepository;
 
-
 	public Finder create() {
 		Finder res = new Finder();
 		String keyWord = "";

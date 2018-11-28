@@ -12,11 +12,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import domain.Complaint;
-import domain.Customer;
 import domain.Referee;
+import domain.Report;
 import services.ComplaintService;
 import services.CustomerService;
 import services.RefereeService;
+import services.ReportService;
 import utilities.AbstractTest;
 @ContextConfiguration(locations = {
 		"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
@@ -27,12 +28,12 @@ import utilities.AbstractTest;
 
 		@Autowired
 		private ComplaintService	complaintService;
-
 		@Autowired
 		private CustomerService		customerService;
 		@Autowired
 		private RefereeService		refereeservice;
-
+		@Autowired
+		private ReportService		reportservice;
 
 		@Test
 		public void saveComplaintTest() {
@@ -66,9 +67,27 @@ import utilities.AbstractTest;
 
 		@Test
 		public void findAllByRefereeNoAssignedTest() {
-			Referee referee = refereeservice.findAll().iterator().next();
-			final Collection<Complaint> res = this.complaintService.findAllByRefereeNoAsigned(referee);
+			this.authenticate(customerService.findAll().iterator().next().getUserAccount().getUsername());
+			
+			final Collection<Complaint> res = this.complaintService.findComplaintsNoAsigned();
 			Assert.notEmpty(res);
+		}
+		
+		@Test
+		public void asingComplaintTest() {
+			Referee referee = refereeservice.findAll().iterator().next();
+			this.authenticate(referee.getUserAccount().getUsername());
+			
+			final Collection<Complaint> res = this.complaintService.findComplaintsNoAsigned();
+			Report report = referee.getReports().iterator().next();
+			
+			Complaint any = res.iterator().next();
+			
+			complaintService.selfAssignComplaint(report, any);
+			
+			Report saved = reportservice.findOne(report.getId());
+			
+			Assert.isTrue(saved.getComplaints().contains(any));
 		}
 
 	}

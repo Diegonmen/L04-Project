@@ -458,7 +458,11 @@
 		<property name="subject" value="subject0" />
 		<property name="body" value="body0" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin0" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin0"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin0" />
 	</bean>
 
@@ -467,7 +471,11 @@
 		<property name="subject" value="subject1" />
 		<property name="body" value="body1" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee0" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee0"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee0" />
 	</bean>
 
@@ -476,7 +484,11 @@
 		<property name="subject" value="subject2" />
 		<property name="body" value="body2" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer0" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer0"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer0" />
 	</bean>
 
@@ -485,7 +497,11 @@
 		<property name="subject" value="subject3" />
 		<property name="body" value="body3" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer0" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer0"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer1" />
 	</bean>
 
@@ -494,7 +510,11 @@
 		<property name="subject" value="subject4" />
 		<property name="body" value="body4" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee2" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee2"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee2" />
 	</bean>
 
@@ -503,7 +523,11 @@
 		<property name="subject" value="subject5" />
 		<property name="body" value="body5" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin0" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin0"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin0" />
 	</bean>
 
@@ -512,7 +536,11 @@
 		<property name="subject" value="subject6" />
 		<property name="body" value="body6" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin0" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin0"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin0" />
 	</bean>
 
@@ -521,7 +549,11 @@
 		<property name="subject" value="subject7" />
 		<property name="body" value="body7" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin0" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin0"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin0" />
 	</bean>
 
@@ -530,7 +562,11 @@
 		<property name="subject" value="subject8" />
 		<property name="body" value="body8" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee0" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee0"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee0" />
 	</bean>
 
@@ -539,7 +575,11 @@
 		<property name="subject" value="subject9" />
 		<property name="body" value="body9" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee0" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee0"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee0" />
 	</bean>
 
@@ -548,7 +588,11 @@
 		<property name="subject" value="subject10" />
 		<property name="body" value="body10" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee0" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee0"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee0" />
 	</bean>
 
@@ -557,7 +601,11 @@
 		<property name="subject" value="subject11" />
 		<property name="body" value="body11" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin1" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin1"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin1" />
 	</bean>
 
@@ -566,7 +614,11 @@
 		<property name="subject" value="subject12" />
 		<property name="body" value="body12" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin1" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin1"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin1" />
 	</bean>
 
@@ -575,7 +627,11 @@
 		<property name="subject" value="subject13" />
 		<property name="body" value="body13" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin1" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin1"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin1" />
 	</bean>
 
@@ -584,7 +640,11 @@
 		<property name="subject" value="subject14" />
 		<property name="body" value="body14" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="admin1" />
+		<property name="recipients">
+			<list>
+				<ref bean="admin1"/>
+			</list>
+		</property>
 		<property name="sender" ref="admin1" />
 	</bean>
 
@@ -593,7 +653,11 @@
 		<property name="subject" value="subject15" />
 		<property name="body" value="body15" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee1" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee1"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee1" />
 	</bean>
 
@@ -602,7 +666,11 @@
 		<property name="subject" value="subject16" />
 		<property name="body" value="body16" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee1" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee1"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee1" />
 	</bean>
 
@@ -611,7 +679,11 @@
 		<property name="subject" value="subject17" />
 		<property name="body" value="body17" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee1" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee1"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee1" />
 	</bean>
 
@@ -620,7 +692,11 @@
 		<property name="subject" value="subject18" />
 		<property name="body" value="body18" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee1" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee1"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee1" />
 	</bean>
 
@@ -629,7 +705,11 @@
 		<property name="subject" value="subject19" />
 		<property name="body" value="body19" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee2" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee2"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee2" />
 	</bean>
 
@@ -638,7 +718,11 @@
 		<property name="subject" value="subject20" />
 		<property name="body" value="body20" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee2" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee2"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee2" />
 	</bean>
 
@@ -647,7 +731,11 @@
 		<property name="subject" value="subject21" />
 		<property name="body" value="body21" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="referee2" />
+		<property name="recipients">
+			<list>
+				<ref bean="referee2"/>
+			</list>
+		</property>
 		<property name="sender" ref="referee2" />
 	</bean>
 	
@@ -656,7 +744,11 @@
 		<property name="subject" value="subject22" />
 		<property name="body" value="body22" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer0" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer0"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer0" />
 	</bean>
 	
@@ -665,7 +757,11 @@
 		<property name="subject" value="subject23" />
 		<property name="body" value="body23" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer0" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer0"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer0" />
 	</bean>
 	
@@ -674,7 +770,11 @@
 		<property name="subject" value="subject24" />
 		<property name="body" value="body24" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer0" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer0"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer0" />
 	</bean>
 	
@@ -683,7 +783,11 @@
 		<property name="subject" value="subject25" />
 		<property name="body" value="body25" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer1" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer1"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer1" />
 	</bean>
 	
@@ -692,7 +796,11 @@
 		<property name="subject" value="subject26" />
 		<property name="body" value="body26" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer1" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer1"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer1" />
 	</bean>
 	
@@ -701,7 +809,11 @@
 		<property name="subject" value="subject27" />
 		<property name="body" value="body27" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer1" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer1"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer1" />
 	</bean>
 	
@@ -710,7 +822,11 @@
 		<property name="subject" value="subject28" />
 		<property name="body" value="body28" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer1" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer1"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer1" />
 	</bean>
 	
@@ -719,7 +835,11 @@
 		<property name="subject" value="subject29" />
 		<property name="body" value="body29" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer2" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer2"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer2" />
 	</bean>
 	
@@ -728,7 +848,11 @@
 		<property name="subject" value="subject30" />
 		<property name="body" value="body30" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer2" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer2"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer2" />
 	</bean>
 	
@@ -737,7 +861,11 @@
 		<property name="subject" value="subject31" />
 		<property name="body" value="body31" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer2" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer2"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer2" />
 	</bean>
 	
@@ -746,7 +874,11 @@
 		<property name="subject" value="subject32" />
 		<property name="body" value="body32" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer2" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer2"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer2" />
 	</bean>
 	
@@ -755,7 +887,11 @@
 		<property name="subject" value="subject33" />
 		<property name="body" value="body33" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer3" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer3"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer3" />
 	</bean>
 	
@@ -764,7 +900,11 @@
 		<property name="subject" value="subject34" />
 		<property name="body" value="body34" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer3" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer3"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer3" />
 	</bean>
 
@@ -773,7 +913,11 @@
 		<property name="subject" value="subject35" />
 		<property name="body" value="body35" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer3" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer3"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer3" />
 	</bean>
 	
@@ -782,7 +926,11 @@
 		<property name="subject" value="subject36" />
 		<property name="body" value="body36" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="customer3" />
+		<property name="recipients">
+			<list>
+				<ref bean="customer3"/>
+			</list>
+		</property>
 		<property name="sender" ref="customer3" />
 	</bean>
 	
@@ -791,7 +939,11 @@
 		<property name="subject" value="subject37" />
 		<property name="body" value="body37" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker0" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker0"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker0" />
 	</bean>
 
@@ -800,7 +952,11 @@
 		<property name="subject" value="subject38" />
 		<property name="body" value="body38" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker0" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker0"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker0" />
 	</bean>
 	
@@ -809,7 +965,11 @@
 		<property name="subject" value="subject39" />
 		<property name="body" value="body39" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker0" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker0"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker0" />
 	</bean>
 	
@@ -818,7 +978,11 @@
 		<property name="subject" value="subject40" />
 		<property name="body" value="body40" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker0" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker0"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker0" />
 	</bean>
 	
@@ -827,7 +991,11 @@
 		<property name="subject" value="subject41" />
 		<property name="body" value="body41" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker1" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker1"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker1" />
 	</bean>
 	
@@ -836,7 +1004,11 @@
 		<property name="subject" value="subject42" />
 		<property name="body" value="body42" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker1" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker1"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker1" />
 	</bean>
 	
@@ -845,7 +1017,11 @@
 		<property name="subject" value="subject43" />
 		<property name="body" value="body43" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker1" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker1"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker1" />
 	</bean>
 	
@@ -854,7 +1030,11 @@
 		<property name="subject" value="subject44" />
 		<property name="body" value="body44" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker1" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker1"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker1" />
 	</bean>
 	
@@ -863,7 +1043,11 @@
 		<property name="subject" value="subject45" />
 		<property name="body" value="body45" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker2" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker2"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker2" />
 	</bean>
 	
@@ -872,7 +1056,11 @@
 		<property name="subject" value="subject46" />
 		<property name="body" value="body46" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker2" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker2"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker2" />
 	</bean>
 	
@@ -881,7 +1069,11 @@
 		<property name="subject" value="subject47" />
 		<property name="body" value="body47" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker2" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker2"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker2" />
 	</bean>
 	
@@ -890,7 +1082,11 @@
 		<property name="subject" value="subject48" />
 		<property name="body" value="body48" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker2" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker2"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker2" />
 	</bean>
 	
@@ -899,7 +1095,11 @@
 		<property name="subject" value="subject49" />
 		<property name="body" value="body49" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker3" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker3"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker3" />
 	</bean>
 	
@@ -908,7 +1108,11 @@
 		<property name="subject" value="subject50" />
 		<property name="body" value="body50" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker3" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker3"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker3" />
 	</bean>
 	
@@ -917,7 +1121,11 @@
 		<property name="subject" value="subject51" />
 		<property name="body" value="body51" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker3" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker3"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker3" />
 	</bean>
 	
@@ -926,7 +1134,11 @@
 		<property name="subject" value="subject52" />
 		<property name="body" value="body52" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="handyWorker3" />
+		<property name="recipients">
+			<list>
+				<ref bean="handyWorker3"/>
+			</list>
+		</property>
 		<property name="sender" ref="handyWorker3" />
 	</bean>
 
@@ -935,7 +1147,11 @@
 		<property name="subject" value="subject53" />
 		<property name="body" value="body53" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="sponsor0" />
+		<property name="recipients">
+			<list>
+				<ref bean="sponsor0"/>
+			</list>
+		</property>
 		<property name="sender" ref="sponsor0" />
 	</bean>
 	
@@ -944,7 +1160,11 @@
 		<property name="subject" value="subject54" />
 		<property name="body" value="body54" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="sponsor0" />
+		<property name="recipients">
+			<list>
+				<ref bean="sponsor0"/>
+			</list>
+		</property>
 		<property name="sender" ref="sponsor0" />
 	</bean>
 	
@@ -953,7 +1173,11 @@
 		<property name="subject" value="subject55" />
 		<property name="body" value="body55" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="sponsor0" />
+		<property name="recipients">
+			<list>
+				<ref bean="sponsor0"/>
+			</list>
+		</property>
 		<property name="sender" ref="sponsor0" />
 	</bean>
 	
@@ -962,7 +1186,11 @@
 		<property name="subject" value="subject56" />
 		<property name="body" value="body56" />
 		<property name="priority" value="NEUTRAL" />
-		<property name="recipient" ref="sponsor0" />
+		<property name="recipients">
+			<list>
+				<ref bean="sponsor0"/>
+			</list>
+		</property>
 		<property name="sender" ref="sponsor0" />
 	</bean>
 
@@ -1010,7 +1238,7 @@
 	</bean>
 
 	<bean id="admin0_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1062,7 +1290,7 @@
 	</bean>
 
 	<bean id="admin1_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1115,7 +1343,7 @@
 	</bean>
 
 	<bean id="referee0_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1167,7 +1395,7 @@
 	</bean>
 
 	<bean id="referee1_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1219,7 +1447,7 @@
 	</bean>
 
 	<bean id="referee2_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1273,7 +1501,7 @@
 	</bean>
 
 	<bean id="customer0_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1325,7 +1553,7 @@
 	</bean>
 
 	<bean id="customer1_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1377,7 +1605,7 @@
 	</bean>
 
 	<bean id="customer2_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1429,7 +1657,7 @@
 	</bean>
 
 	<bean id="customer3_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1483,7 +1711,7 @@
 	</bean>
 
 	<bean id="handyWorker0_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1535,7 +1763,7 @@
 	</bean>
 
 	<bean id="handyWorker1_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1587,7 +1815,7 @@
 	</bean>
 
 	<bean id="handyWorker2_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1639,7 +1867,7 @@
 	</bean>
 
 	<bean id="handyWorker3_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -1693,7 +1921,7 @@
 	</bean>
 
 	<bean id="sponsor0_box3" class="domain.Box">
-		<property name="name" value="NOTIFICATIONBOX" />
+		<property name="name" value="SPAMBOX" />
 		<property name="predefined" value="true" />
 		<property name="messages">
 			<list>
@@ -2967,7 +3195,7 @@
 		<property name="phoneNumber" value="600000000" />
 		<property name="address" value="Seville" />
 		<property name="suspicious" value = "false"/>
-		<property name="userAccount" ref="userAccount1" />
+		<property name="userAccount" ref="userAccount6" />
 		<property name="socialIdentity">
 			<list>
 				<ref bean="socialIdentity9"/>

@@ -38,7 +38,6 @@ public class Box extends DomainEntity {
 	private Collection<Message>	messages;
 	private Collection<Box>		children;
 
-
 	@OneToMany
 	public Collection<Message> getMessages() {
 		return this.messages;

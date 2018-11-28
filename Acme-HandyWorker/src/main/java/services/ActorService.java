@@ -2,6 +2,12 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +27,20 @@ public class ActorService {
 
 	@Autowired
 	private ActorRepository	actorRepository;
-
+	@PersistenceContext
+	EntityManager manager;
+	
+	public Collection<Actor> findSuspiciousActor() {
+		return actorRepository.findSuspiciousActor();
+	}
 
 	// Supporting services ----------------------------------------------------
 
 	// Simple CRUD methods ----------------------------------------------------
+	
+	public Collection<String> findAllUsername(int adminId) {
+		return actorRepository.findAllUsername(adminId);
+	}
 
 	public Collection<Actor> findAll() {
 		Collection<Actor> result;
@@ -34,6 +49,37 @@ public class ActorService {
 		Assert.notNull(result);
 
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	public Collection<Actor> findByUsernames(Collection<String> usernames) {
+		Assert.notNull(usernames);
+		List<String> transformed = new LinkedList<String>();
+		
+		for(String e : usernames) {
+			if(e != null) {
+				transformed.add(String.format("'%s'", e));
+			}
+		}
+		
+		if(transformed.isEmpty()) {
+			return new LinkedList<Actor>();
+		}
+		
+		StringBuilder queryParam = new StringBuilder(transformed.toString());
+		queryParam.deleteCharAt(0);
+		queryParam.deleteCharAt(queryParam.length() -1);
+		
+		Query query = manager.createQuery(String.format("select c from Actor c where c.userAccount.username in (%s)", queryParam));
+		
+		return query.getResultList();
+	}
+
+	public Actor findSelf() {
+		UserAccount account = LoginService.getPrincipal();
+		Assert.notNull(account);
+		
+		return actorRepository.findSelf(account.getUsername());
 	}
 
 	public boolean exists(final Integer id) {
