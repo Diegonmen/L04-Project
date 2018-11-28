@@ -2,6 +2,7 @@
 package TestGenerator;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -30,6 +31,12 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	@Autowired
 	private CustomerService		customerService;
 
+	@Test
+	public void findFixUpTask() {
+		List<FixUpTask> list = fixuptaskService.filter("970203", 10);
+		
+		Assert.isTrue(!list.isEmpty());
+	}
 
 	@Test
 	public void saveFixUpTaskTest() {

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Actor;
+import domain.Administrator;
 import repositories.ActorRepository;
 import repositories.AdministratorRepository;
 import security.Authority;
