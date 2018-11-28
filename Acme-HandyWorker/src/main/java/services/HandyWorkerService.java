@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -9,13 +10,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Application;
+import domain.Box;
+import domain.Customer;
+import domain.Endorsement;
+import domain.FixUpTask;
+import domain.HandyWorker;
+import domain.SocialIdentity;
+import domain.Tutorial;
+import repositories.CustomerRepository;
+import repositories.FixUpTaskRepository;
 import repositories.HandyWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Application;
-import domain.FixUpTask;
-import domain.HandyWorker;
 
 @Service
 @Transactional
@@ -26,14 +34,13 @@ public class HandyWorkerService {
 	@Autowired
 	private HandyWorkerRepository	handyWorkerRepository;
 
+	@Autowired
+	private CustomerRepository		customerRepository;
+	
+	@Autowired
+	private FixUpTaskRepository		fixUpTaskRepository;
+	
 	// Supporting services ----------------------------------------------------
-
-	@Autowired
-	private FinderService			finderService;
-
-	@Autowired
-	private CurriculumService		curriculumService;
-
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -109,7 +116,17 @@ public class HandyWorkerService {
 		authority.setAuthority("HANDYWORKER");
 		userAccount.addAuthority(authority);
 		userAccount.setEnabled(true);
-
+		
+		Collection<Application> applications = new LinkedList<>();
+		result.setApplications(applications);
+		Collection<Box> boxes = new LinkedList<>();
+		result.setBoxes(boxes);
+		Collection<Endorsement> endorsements = new LinkedList<>();
+		result.setEndorsements(endorsements);
+		Collection<SocialIdentity> socialIdentity = new LinkedList<>();
+		result.setSocialIdentity(socialIdentity);
+		Collection<Tutorial> tutorials = new LinkedList<>();
+		result.setTutorials(tutorials);
 		result.setUserAccount(userAccount);
 
 		return result;
@@ -122,12 +139,12 @@ public class HandyWorkerService {
 		this.handyWorkerRepository.delete(handyWorker);
 	}
 
-	public HandyWorker findByUserAccount(final int userAccountId) {
+	public HandyWorker findHandyWorkerByUserAccount(final UserAccount userAccount) {
 		HandyWorker result;
 
-		Assert.isTrue(userAccountId != 0);
+		Assert.isTrue(userAccount.getId() != 0);
 
-		result = this.handyWorkerRepository.findByUserAccountId(userAccountId);
+		result = this.handyWorkerRepository.findByUserAccountId(userAccount.getId());
 
 		return result;
 	}
@@ -150,4 +167,29 @@ public class HandyWorkerService {
 		result = this.handyWorkerRepository.findByFixUpTaskId(fixUpTask.getId());
 		return result;
 	}
+	
+	public Customer findCustomerProfile(FixUpTask fixUpTask) {
+		Customer res;
+		Assert.notNull(fixUpTask);
+		res = this.customerRepository.findCustomerByFixUpTaskId(fixUpTask.getId());
+		Assert.notNull(res);
+		return res;
+	}
+	
+	public Collection<FixUpTask> allCustomerFixUpTask(Customer customer){
+		Collection<FixUpTask> res = new LinkedList<>();
+		Assert.notNull(customer);
+		res = fixUpTaskRepository.findFixUpTasksByCustomer(customer.getId());
+		Assert.notNull(res);
+		return res;
+	}
+	
+	public HandyWorker findHandyWorkerByApplication(Application application) {
+		HandyWorker res;
+		Assert.notNull(application);
+		res = handyWorkerRepository.findByApplicationId(application.getId());
+		Assert.notNull(res);
+		return res;
+	}
+	
 }

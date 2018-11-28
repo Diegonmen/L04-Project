@@ -12,13 +12,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
-import security.LoginService;
-import services.ApplicationService;
-import services.CustomerService;
-import utilities.AbstractTest;
 import domain.Application;
 import domain.CreditCard;
 import domain.Customer;
+import domain.HandyWorker;
+import security.LoginService;
+import services.ApplicationService;
+import services.CustomerService;
+import services.HandyWorkerService;
+import utilities.AbstractTest;
 
 @ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
 		"classpath:spring/config/packages.xml" })
@@ -31,9 +33,12 @@ public class ApplicationServiceTest extends AbstractTest {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private HandyWorkerService handyWorkerService;
 
 	@Test
-	public void saveApplicationTest() {
+	public void saveApplicationCustomerTest() {
 		Application created;
 		Application saved;
 		Application copyCreated;
@@ -56,7 +61,31 @@ public class ApplicationServiceTest extends AbstractTest {
 				creditCard.setHolderName("Paco Asencio");
 				creditCard.setNumber("1234567812345678");
 				copyCreated.setCreditCard(creditCard);
-				saved = this.applicationService.save(copyCreated);
+				saved = this.applicationService.saveCustomer(copyCreated);
+				Assert.isTrue(this.applicationService.findAll().contains(saved));
+				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
+			}
+		}
+
+	}
+	
+	@Test
+	public void saveApplicationHandyWorkerTest() {
+		Application created;
+		Application saved;
+		Application copyCreated;
+		HandyWorker handyWorker;
+		super.authenticate("handyWorker1");
+
+		handyWorker = this.handyWorkerService.findHandyWorkerByUserAccount(LoginService.getPrincipal());
+		for (final Application a : this.applicationService.findApplicationsByHandyWorker(handyWorker)) {
+			if (a.getStatus().equals("PENDING")) {
+				created = a;
+				copyCreated = created;
+				copyCreated.setStatus("ACCEPTED");
+				final String comment = "Comentario";
+				copyCreated.getComments().add(comment);
+				saved = this.applicationService.saveCustomer(copyCreated);
 				Assert.isTrue(this.applicationService.findAll().contains(saved));
 				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
 			}

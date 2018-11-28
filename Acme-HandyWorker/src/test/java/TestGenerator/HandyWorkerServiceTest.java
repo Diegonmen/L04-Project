@@ -1,7 +1,9 @@
 
+
 package TestGenerator;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import javax.transaction.Transactional;
 
@@ -12,9 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import domain.Customer;
+import domain.FixUpTask;
+import domain.HandyWorker;
+import services.CustomerService;
+import services.FixUpTaskService;
 import services.HandyWorkerService;
 import utilities.AbstractTest;
-import domain.HandyWorker;
 
 @ContextConfiguration(locations = {
 	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
@@ -25,6 +31,12 @@ public class HandyWorkerServiceTest extends AbstractTest {
 
 	@Autowired
 	private HandyWorkerService	handyworkerService;
+	
+	@Autowired
+	private FixUpTaskService fixUpTaskService;
+	
+	@Autowired
+	private CustomerService customerService;
 
 
 	@Test
@@ -82,6 +94,25 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		Assert.isNull(handyWorker.getPhoto());
 		Assert.isNull(handyWorker.getMake());
 		Assert.isNull(handyWorker.getMiddleName());
+	}
+	
+	@Test
+	public void testFindCustomerProfile() {
+		final FixUpTask fixUpTask;
+		fixUpTask = this.fixUpTaskService.findAll().iterator().next();
+		Assert.notNull(fixUpTask);
+		Customer customer = this.handyworkerService.findCustomerProfile(fixUpTask);
+		Assert.notNull(customer);
+		Assert.isTrue(customer.getId() != 0);
+	}
+	
+	@Test
+	public void allCustomerFixUpTaskTest() {
+		final Collection<FixUpTask> fixUpTasks;
+		Customer customer = customerService.findAll().iterator().next();
+		Assert.notNull(customer);
+		fixUpTasks = handyworkerService.allCustomerFixUpTask(customer);
+		Assert.notNull(fixUpTasks);
 	}
 
 	private HandyWorker copyHandyWorker(final HandyWorker handyWorker) {

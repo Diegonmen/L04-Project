@@ -12,13 +12,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Application;
+import domain.CreditCard;
+import domain.Customer;
+import domain.HandyWorker;
 import repositories.ApplicationRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Application;
-import domain.CreditCard;
-import domain.Customer;
 
 @Service
 @Transactional
@@ -62,7 +63,7 @@ public class ApplicationService {
 		return this.applicationRepository.saveAndFlush(application);
 	}
 
-	public Application save(final Application application) {
+	public Application saveCustomer(final Application application) {
 		final Application result, saved;
 		Assert.notNull(application);
 		Assert.isTrue(application.getId() != 0);
@@ -73,7 +74,7 @@ public class ApplicationService {
 		authority = new Authority();
 		authority.setAuthority("CUSTOMER");
 
-		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains("CUSTOMER")
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains(authority)
 			&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
@@ -98,7 +99,7 @@ public class ApplicationService {
 				creditCard.setHolderName("Paco Asencio");
 				creditCard.setNumber("1234567812345678");
 				final Application application2 = this.addCreditCard(application, creditCard);
-				final Application application3 = this.addComment(application2, "Comentario");
+				final Application application3 = this.addComment(application2, logedUserAccount.getUsername().toString() + "Comentario");
 				application3.setStatus("ACCEPTED");
 				result = this.applicationRepository.save(application3);
 				return result;
@@ -109,6 +110,46 @@ public class ApplicationService {
 			return result;
 		}
 	}
+	
+	public Application saveHandyWorker(final Application application) {
+		final Application result, saved;
+		Assert.notNull(application);
+		Assert.isTrue(application.getId() != 0);
+		final UserAccount userAccount = LoginService.getPrincipal();
+		final Date currentMoment = new Date(System.currentTimeMillis() - 1);
+		final Authority authority;
+		final UserAccount logedUserAccount;
+		authority = new Authority();
+		authority.setAuthority("HANDYWORKER");
+
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains(authority)
+			&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "customer.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(this.customerService.findCustomerByApplication(application).getUserAccount()), "handyWorker.notEqual.userAccount");
+			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
+				//TODO update con status rejected y userAccount
+				saved = this.applicationRepository.findOne(application.getId());
+				Assert.notNull(saved, "application.not.null");
+				final Application application2 = this.addComment(application, logedUserAccount.getUsername().toString() + "Comentario");
+				result = this.applicationRepository.save(application2);
+				return result;
+			} else {
+				//TODO update con status accepted y userAccount
+				saved = this.applicationRepository.findOne(application.getId());
+				Assert.notNull(saved, "application.not.null");
+				final Application application2 = this.addComment(application, logedUserAccount.getUsername().toString() + "Comentario");
+				application2.setStatus("ACCEPTED");
+				result = this.applicationRepository.save(application2);
+				return result;
+			}
+		} else {
+
+			result = this.applicationRepository.save(application);
+			return result;
+		}
+	}
+	
 	public List<Application> findAll() {
 		return this.applicationRepository.findAll();
 	}
@@ -125,7 +166,15 @@ public class ApplicationService {
 		Assert.notNull(customer);
 		Assert.isTrue(this.customerService.exists(customer.getId()));
 		final Collection<Application> res = this.applicationRepository.findByCustomerId(customer.getId());
+		Assert.notNull(res);
 		return res;
 	}
-
+	
+	public Collection<Application> findApplicationsByHandyWorker(final HandyWorker handyWorker){
+		Assert.notNull(handyWorker);
+		Assert.isTrue(handyWorker.getId() != 0);
+		final Collection<Application> res = this.applicationRepository.findByHandyWorkerId(handyWorker.getId());
+		Assert.notNull(res);
+		return res;
+	}
 }

@@ -18,6 +18,11 @@ import security.UserAccount;
 import security.UserAccountRepository;
 import domain.Actor;
 import domain.Administrator;
+import domain.Box;
+import domain.Complaint;
+import domain.Endorsement;
+import domain.FixUpTask;
+import domain.SocialIdentity;
 
 @Service
 @Transactional
@@ -120,6 +125,10 @@ public class AdministratorService {
 		userAccount.addAuthority(authority);
 		userAccount.setEnabled(true);
 
+		Collection<Box> boxes = new LinkedList<>();
+		result.setBoxes(boxes);
+		Collection<SocialIdentity> socialIdentity = new LinkedList<>();
+		result.setSocialIdentity(socialIdentity);
 		result.setUserAccount(userAccount);
 
 		return result;

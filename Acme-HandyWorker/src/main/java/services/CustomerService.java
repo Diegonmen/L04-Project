@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -9,13 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Application;
+import domain.Box;
+import domain.Complaint;
+import domain.Customer;
+import domain.Endorsement;
+import domain.FixUpTask;
+import domain.SocialIdentity;
 import repositories.CustomerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Application;
-import domain.Customer;
-import domain.FixUpTask;
 
 @Service
 @Transactional
@@ -108,6 +113,16 @@ public class CustomerService {
 		userAccount.addAuthority(authority);
 		userAccount.setEnabled(true);
 
+		Collection<FixUpTask> fixUpTasks = new LinkedList<>();
+		result.setFixUpTasks(fixUpTasks);
+		Collection<Box> boxes = new LinkedList<>();
+		result.setBoxes(boxes);
+		Collection<Endorsement> endorsements = new LinkedList<>();
+		result.setEndorsements(endorsements);
+		Collection<SocialIdentity> socialIdentity = new LinkedList<>();
+		result.setSocialIdentity(socialIdentity);
+		Collection<Complaint> complaints = new LinkedList<>();
+		result.setComplaints(complaints);
 		result.setUserAccount(userAccount);
 
 		return result;
