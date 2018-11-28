@@ -15,8 +15,10 @@ import org.springframework.util.Assert;
 import domain.Application;
 import domain.CreditCard;
 import domain.Customer;
+import domain.FixUpTask;
 import domain.HandyWorker;
 import repositories.ApplicationRepository;
+import repositories.HandyWorkerRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
@@ -28,13 +30,15 @@ public class ApplicationService {
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
-	private ApplicationRepository	applicationRepository;
+	private ApplicationRepository applicationRepository;
+
+	@Autowired
+	private HandyWorkerRepository handyWorkerRepository;
 
 	// Supporting services ----------------------------------------------------
 
 	@Autowired
-	private CustomerService			customerService;
-
+	private CustomerService customerService;
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -63,7 +67,7 @@ public class ApplicationService {
 		return this.applicationRepository.saveAndFlush(application);
 	}
 
-	public Application saveCustomer(final Application application) {
+	public Application saveCustomer(final Application application, String comment, CreditCard creditCard) {
 		final Application result, saved;
 		Assert.notNull(application);
 		Assert.isTrue(application.getId() != 0);
@@ -74,13 +78,18 @@ public class ApplicationService {
 		authority = new Authority();
 		authority.setAuthority("CUSTOMER");
 
-		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains(authority)
-			&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING")
+				&& userAccount.getAuthorities().contains(authority)
+				&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application))
+						.contains(application)) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
-			Assert.isTrue(logedUserAccount.equals(this.customerService.findCustomerByApplication(application).getUserAccount()), "customer.notEqual.userAccount");
+			Assert.isTrue(
+					logedUserAccount
+							.equals(this.customerService.findCustomerByApplication(application).getUserAccount()),
+					"customer.notEqual.userAccount");
 			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
-				//TODO update con status rejected y userAccount
+				// TODO update con status rejected y userAccount
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
 				final Application application2 = this.addComment(application, "Comentario");
@@ -88,20 +97,15 @@ public class ApplicationService {
 				result = this.applicationRepository.save(application2);
 				return result;
 			} else {
-				//TODO update con status accepted y userAccount
+				// TODO update con status accepted y userAccount
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
-				final CreditCard creditCard = new CreditCard();
-				creditCard.setBrandName("VISA");
-				creditCard.setCVV(123);
-				creditCard.setExpirationMonth(12);
-				creditCard.setExpirationYear(2020);
-				creditCard.setHolderName("Paco Asencio");
-				creditCard.setNumber("1234567812345678");
-				final Application application2 = this.addCreditCard(application, creditCard);
-				final Application application3 = this.addComment(application2, logedUserAccount.getUsername().toString() + "Comentario");
-				application3.setStatus("ACCEPTED");
-				result = this.applicationRepository.save(application3);
+				if(!comment.equals(null)) {
+				application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+				}
+				application.setCreditCard(creditCard);
+				application.setStatus("ACCEPTED");
+				result = this.applicationRepository.save(application);
 				return result;
 			}
 		} else {
@@ -110,8 +114,8 @@ public class ApplicationService {
 			return result;
 		}
 	}
-	
-	public Application saveHandyWorker(final Application application) {
+
+	public Application saveHandyWorker(final Application application, String comment) {
 		final Application result, saved;
 		Assert.notNull(application);
 		Assert.isTrue(application.getId() != 0);
@@ -122,25 +126,34 @@ public class ApplicationService {
 		authority = new Authority();
 		authority.setAuthority("HANDYWORKER");
 
-		if (this.exists(application.getId()) && application.getStatus().equals("PENDING") && userAccount.getAuthorities().contains(authority)
-			&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application)).contains(application)) {
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING")
+				&& userAccount.getAuthorities().contains(authority)
+				&& this.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application))
+						.contains(application)) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
-			Assert.isTrue(logedUserAccount.equals(this.customerService.findCustomerByApplication(application).getUserAccount()), "handyWorker.notEqual.userAccount");
+			Assert.isTrue(
+					logedUserAccount
+							.equals(this.customerService.findCustomerByApplication(application).getUserAccount()),
+					"handyWorker.notEqual.userAccount");
 			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
-				//TODO update con status rejected y userAccount
+				// TODO update con status rejected y userAccount
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
-				final Application application2 = this.addComment(application, logedUserAccount.getUsername().toString() + "Comentario");
-				result = this.applicationRepository.save(application2);
+				if(!comment.equals(null)) {
+					application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+				}
+				result = this.applicationRepository.save(application);
 				return result;
 			} else {
-				//TODO update con status accepted y userAccount
+				// TODO update con status accepted y userAccount
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
-				final Application application2 = this.addComment(application, logedUserAccount.getUsername().toString() + "Comentario");
-				application2.setStatus("ACCEPTED");
-				result = this.applicationRepository.save(application2);
+				if(!comment.equals(null)) {
+					application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+				}
+				application.setStatus("ACCEPTED");
+				result = this.applicationRepository.save(application);
 				return result;
 			}
 		} else {
@@ -149,7 +162,7 @@ public class ApplicationService {
 			return result;
 		}
 	}
-	
+
 	public List<Application> findAll() {
 		return this.applicationRepository.findAll();
 	}
@@ -169,12 +182,21 @@ public class ApplicationService {
 		Assert.notNull(res);
 		return res;
 	}
-	
-	public Collection<Application> findApplicationsByHandyWorker(final HandyWorker handyWorker){
+
+	public Collection<Application> findApplicationsByHandyWorker(final HandyWorker handyWorker) {
 		Assert.notNull(handyWorker);
 		Assert.isTrue(handyWorker.getId() != 0);
 		final Collection<Application> res = this.applicationRepository.findByHandyWorkerId(handyWorker.getId());
 		Assert.notNull(res);
+		return res;
+	}
+
+	public Application findAcceptedHandyWorkerApplicationByFixUpTask(final FixUpTask fixUpTask) {
+		Assert.notNull(fixUpTask);
+		Assert.isTrue(fixUpTask.getId() != 0);
+		Application res = applicationRepository.findAcceptedHandyWorkerApplicationByFixUpTaskId(fixUpTask.getId(),
+				this.handyWorkerRepository.findByFixUpTaskId(fixUpTask.getId()).getId());
+		Assert.isTrue(res.getStatus().equals("ACCEPTED"));
 		return res;
 	}
 }

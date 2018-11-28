@@ -15,7 +15,9 @@ import org.springframework.util.Assert;
 import domain.Application;
 import domain.CreditCard;
 import domain.Customer;
+import domain.FixUpTask;
 import domain.HandyWorker;
+import repositories.FixUpTaskRepository;
 import security.LoginService;
 import services.ApplicationService;
 import services.CustomerService;
@@ -30,6 +32,9 @@ public class ApplicationServiceTest extends AbstractTest {
 
 	@Autowired
 	private ApplicationService applicationService;
+	
+	@Autowired
+	private FixUpTaskRepository fixUpTaskRepository;
 
 	@Autowired
 	private CustomerService customerService;
@@ -51,8 +56,7 @@ public class ApplicationServiceTest extends AbstractTest {
 				created = a;
 				copyCreated = created;
 				copyCreated.setStatus("ACCEPTED");
-				final String comment = "Comentario";
-				copyCreated.getComments().add(comment);
+				final String comment = "Test Comment";
 				final CreditCard creditCard = new CreditCard();
 				creditCard.setBrandName("VISA");
 				creditCard.setCVV(123);
@@ -60,8 +64,7 @@ public class ApplicationServiceTest extends AbstractTest {
 				creditCard.setExpirationYear(2020);
 				creditCard.setHolderName("Paco Asencio");
 				creditCard.setNumber("1234567812345678");
-				copyCreated.setCreditCard(creditCard);
-				saved = this.applicationService.saveCustomer(copyCreated);
+				saved = this.applicationService.saveCustomer(copyCreated, comment, creditCard);
 				Assert.isTrue(this.applicationService.findAll().contains(saved));
 				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
 			}
@@ -80,12 +83,11 @@ public class ApplicationServiceTest extends AbstractTest {
 		handyWorker = this.handyWorkerService.findHandyWorkerByUserAccount(LoginService.getPrincipal());
 		for (final Application a : this.applicationService.findApplicationsByHandyWorker(handyWorker)) {
 			if (a.getStatus().equals("PENDING")) {
+				String comment = "Comment Test";
 				created = a;
 				copyCreated = created;
 				copyCreated.setStatus("ACCEPTED");
-				final String comment = "Comentario";
-				copyCreated.getComments().add(comment);
-				saved = this.applicationService.saveCustomer(copyCreated);
+				saved = this.applicationService.saveHandyWorker(copyCreated, comment);
 				Assert.isTrue(this.applicationService.findAll().contains(saved));
 				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
 			}
@@ -117,6 +119,14 @@ public class ApplicationServiceTest extends AbstractTest {
 		Assert.isTrue(application.getId() != 0);
 		Assert.isTrue(this.applicationService.exists(application.getId()));
 		this.applicationService.delete(application);
+	}
+	
+	@Test
+	public void findAcceptedHandyWorkerApplicationByFixUpTaskTest () {
+		FixUpTask fixUpTask = this.fixUpTaskRepository.findAllFixUpTaskWithAcceptedApplications().iterator().next();
+		Assert.notNull(fixUpTask);
+		Application res = this.applicationService.findAcceptedHandyWorkerApplicationByFixUpTask(fixUpTask);
+		Assert.isTrue(res.getStatus().equals("ACCEPTED"));
 	}
 
 }
