@@ -12,51 +12,63 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import domain.Complaint;
+import domain.Customer;
+import domain.Referee;
 import services.ComplaintService;
+import services.CustomerService;
+import services.RefereeService;
 import utilities.AbstractTest;
-@ContextConfiguration(locations = {"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"}) 
-@RunWith(SpringJUnit4ClassRunner.class) 
-@Transactional 
-public class ComplaintServiceTest extends AbstractTest { 
+@ContextConfiguration(locations = {
+		"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
+	})
+	@RunWith(SpringJUnit4ClassRunner.class)
+	@Transactional
+	public class ComplaintServiceTest extends AbstractTest {
 
-@Autowired 
-private ComplaintService	complaintService; 
+		@Autowired
+		private ComplaintService	complaintService;
 
-@Test 
-public void saveComplaintTest(){ 
-Complaint complaint, saved;
-Collection<Complaint> complaints;
-complaint = complaintService.findAll().iterator().next();
-complaint.setVersion(57);
-saved = complaintService.save(complaint);
-complaints = complaintService.findAll();
-Assert.isTrue(complaints.contains(saved));
-} 
+		@Autowired
+		private CustomerService		customerService;
+		@Autowired
+		private RefereeService		refereeservice;
 
-@Test 
-public void findAllComplaintTest() { 
-Collection<Complaint> result; 
-result = complaintService.findAll(); 
-Assert.notNull(result); 
-} 
 
-@Test 
-public void findOneComplaintTest(){ 
-Complaint complaint = complaintService.findAll().iterator().next(); 
-int complaintId = complaint.getId(); 
-Assert.isTrue(complaintId != 0); 
-Complaint result; 
-result = complaintService.findOne(complaintId); 
-Assert.notNull(result); 
-} 
+		@Test
+		public void saveComplaintTest() {
+			Complaint complaint, saved;
+			Collection<Complaint> complaints;
+			this.authenticate(customerService.findAll().iterator().next().getUserAccount().getUsername());
+			complaint = this.complaintService.findAll().iterator().next();
+			complaint.setDescription("Description");
+			saved = this.complaintService.save(complaint);
+			complaints = this.complaintService.findAll();
+			Assert.isTrue(complaints.contains(saved));
+		}
 
-@Test 
-public void deleteComplaintTest() { 
-Complaint complaint = complaintService.findAll().iterator().next(); 
-Assert.notNull(complaint); 
-Assert.isTrue(complaint.getId() != 0); 
-Assert.isTrue(this.complaintService.exists(complaint.getId())); 
-this.complaintService.delete(complaint); 
-} 
+		@Test
+		public void findAllComplaintTest() {
+			Collection<Complaint> result;
+			result = this.complaintService.findAll();
+			Assert.notNull(result);
+		}
 
-} 
+		@Test
+		public void findOneComplaintTest() {
+			final Complaint complaint = this.complaintService.findAll().iterator().next();
+			final int complaintId = complaint.getId();
+			Assert.isTrue(complaintId != 0);
+			Complaint result;
+			result = this.complaintService.findOne(complaintId);
+			Assert.notNull(result);
+		}
+
+
+		@Test
+		public void findAllByRefereeNoAssignedTest() {
+			Referee referee = refereeservice.findAll().iterator().next();
+			final Collection<Complaint> res = this.complaintService.findAllByRefereeNoAsigned(referee);
+			Assert.notEmpty(res);
+		}
+
+	}
