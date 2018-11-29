@@ -26,7 +26,6 @@ public class RefereeServiceTest extends AbstractTest {
 	@Autowired
 	private RefereeService	refereeService;
 
-
 	@Test
 	public void saveRefereeTest() {
 		Referee created;

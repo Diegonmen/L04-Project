@@ -12,19 +12,13 @@ import org.springframework.util.Assert;
 
 import domain.Actor;
 import domain.Administrator;
-import repositories.ActorRepository;
+import domain.Box;
+import domain.Message;
+import domain.SocialIdentity;
 import repositories.AdministratorRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import security.UserAccountRepository;
-import domain.Actor;
-import domain.Administrator;
-import domain.Box;
-import domain.Complaint;
-import domain.Endorsement;
-import domain.FixUpTask;
-import domain.SocialIdentity;
 
 @Service
 @Transactional
@@ -36,15 +30,25 @@ public class AdministratorService {
 	private AdministratorRepository	administratorRepository;
 
 	@Autowired
-	private ActorRepository			actorRepository;
+	private ActorService			actorservice;
 	
 	@Autowired
 	LoginService loginservice;
+	
+	@Autowired
+	private MessageService messageservice;
 
 
 	// Supporting services ----------------------------------------------------
 
 	// Simple CRUD methods ----------------------------------------------------
+	
+	public void sendAll(Message message) {
+		Assert.notNull(message);
+		
+		Actor self = actorservice.findSelf();
+		messageservice.sendMessage(actorservice.findAllUsername(self.getId()), message);
+	}
 
 	public Collection<Administrator> findAll() {
 		Collection<Administrator> result;
@@ -57,7 +61,7 @@ public class AdministratorService {
 
 	public Collection<Actor> findSuspiciousActor() {
 		final Collection<Actor> actors = new LinkedList<>();
-		actors.addAll(this.actorRepository.findSuspiciousActor());
+		actors.addAll(this.actorservice.findSuspiciousActor());
 		return actors;
 
 	}

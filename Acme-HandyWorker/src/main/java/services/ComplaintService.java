@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import domain.Complaint;
-import domain.Customer;
 import domain.Referee;
 import domain.Report;
 import repositories.ComplaintRepository;
@@ -25,7 +24,8 @@ public class ComplaintService {
 	//Managed Repository
 	@Autowired
 	private ComplaintRepository	complaintRepository;
-
+	@Autowired
+	private ReportService reportservice;
 
 	//Constructor
 	public ComplaintService() {
@@ -80,28 +80,17 @@ public class ComplaintService {
 
 	//Other Business
 
-	public Collection<Complaint> findAllByRefereeNoAsigned(final Referee r) {
-		Collection<Complaint> complaints;
-		Report report = this.complaintRepository.findReportWithComplaintsNoAsigned();
-		complaints = report.getComplaints();
-		Assert.isTrue(!(complaints.isEmpty()));
-
-		return complaints;
+	public Collection<Complaint> findComplaintsNoAsigned() {
+		return this.complaintRepository.findComplaintsNoAsigned();
 	}
 
-	public Complaint selfAssignComplaint(final Referee r) {
-		final Collection<Complaint> complaints = this.findAllByRefereeNoAsigned(r);
-		final Report report = new Report();
-		final Collection<Report> reps = new ArrayList<Report>();
-
-		final Complaint elegido = (Complaint) complaints.toArray()[0];
-		complaints.add(elegido);
-		report.setComplaints(complaints);
-		reps.add(report);
-
-		r.setReports(reps);
-
-		return elegido;
+	public Report selfAssignComplaint(Report r, Complaint c) {
+		Assert.notNull(r);
+		Assert.notNull(c);
+		
+		r.getComplaints().add(c);
+		
+		return reportservice.save(r);
 	}
 
 	public Collection<Complaint> findByReferee(final Referee r) {
