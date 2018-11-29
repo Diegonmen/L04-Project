@@ -2469,7 +2469,7 @@
 		<property name="title" value="warrantyTitle3" />
 		<property name="terms" value="warrantyTerms3" />
 		<property name="applicableLaws" value="applicableLaws3" />
-		<property name="finalMode" value="true">
+		<property name="finalMode" value="false">
 		</property>
 	</bean>
 	
