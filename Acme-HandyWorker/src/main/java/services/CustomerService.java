@@ -19,6 +19,7 @@ import domain.CreditCard;
 import domain.Customer;
 import domain.Endorsement;
 import domain.FixUpTask;
+import domain.Message;
 import domain.SocialIdentity;
 import repositories.CustomerRepository;
 import security.Authority;
@@ -94,6 +95,30 @@ public class CustomerService {
 			Assert.isTrue(customer.isSuspicious() == false, "customer.notSuspicious.false");
 			customer.getUserAccount().setPassword(encoder.encodePassword(customer.getUserAccount().getPassword(), null));
 			customer.getUserAccount().setEnabled(true);
+			
+			Collection<Message> messages = new LinkedList<>();
+			Box inbox = new Box();
+			inbox.setName("INBOX");
+			inbox.setPredefined(true);
+			inbox.setMessages(messages);
+			Box outbox = new Box();
+			outbox.setName("OUTBOX");
+			outbox.setPredefined(true);
+			outbox.setMessages(messages);
+			Box trashbox = new Box();
+			trashbox.setName("TRASHBOX");
+			trashbox.setPredefined(true);
+			trashbox.setMessages(messages);
+			Box spambox = new Box();
+			spambox.setName("INBOX");
+			spambox.setPredefined(true);
+			spambox.setMessages(messages);
+			Collection<Box> boxes = new LinkedList<Box>();
+			boxes.add(inbox);
+			boxes.add(outbox);
+			boxes.add(trashbox);
+			boxes.add(spambox);
+			customer.setBoxes(boxes);
 
 		}
 

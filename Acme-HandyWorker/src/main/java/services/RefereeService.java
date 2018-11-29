@@ -15,6 +15,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Box;
+import domain.Message;
 import domain.Referee;
 import domain.Report;
 import domain.SocialIdentity;
@@ -88,6 +89,29 @@ public class RefereeService {
 			Assert.isTrue(referee.isSuspicious() == false, "admin.notSuspicious.false");
 			referee.getUserAccount().setPassword(encoder.encodePassword(referee.getUserAccount().getPassword(), null));
 			referee.getUserAccount().setEnabled(true);
+			Collection<Message> messages = new LinkedList<>();
+			Box inbox = new Box();
+			inbox.setName("INBOX");
+			inbox.setPredefined(true);
+			inbox.setMessages(messages);
+			Box outbox = new Box();
+			outbox.setName("OUTBOX");
+			outbox.setPredefined(true);
+			outbox.setMessages(messages);
+			Box trashbox = new Box();
+			trashbox.setName("TRASHBOX");
+			trashbox.setPredefined(true);
+			trashbox.setMessages(messages);
+			Box spambox = new Box();
+			spambox.setName("INBOX");
+			spambox.setPredefined(true);
+			spambox.setMessages(messages);
+			Collection<Box> boxes = new LinkedList<Box>();
+			boxes.add(inbox);
+			boxes.add(outbox);
+			boxes.add(trashbox);
+			boxes.add(spambox);
+			referee.setBoxes(boxes);
 
 		}
 

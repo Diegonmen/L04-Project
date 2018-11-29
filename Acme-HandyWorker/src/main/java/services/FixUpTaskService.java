@@ -54,13 +54,6 @@ public class FixUpTaskService {
 		fixUpTaskRepository.delete(entity);
 	}
 
-	public FixUpTask addPhases(FixUpTask fixUpTask) {
-		
-		return fixUpTask;
-	}
-
-	
-
 	public boolean exists(final Integer id) {
 		return this.fixUpTaskRepository.exists(id);
 	}
@@ -94,5 +87,10 @@ public class FixUpTaskService {
 
 		return fixuptask;
 	}
+	
+	public Collection<Double> findAvgMinMaxStdDvtFixUpTasks() {
+		  Collection<Double> res = fixUpTaskRepository.findFixUpTaskAvgMinMaxStrDvt();
+		  return res;
+		 }
 
 }

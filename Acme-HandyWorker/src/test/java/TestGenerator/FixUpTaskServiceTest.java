@@ -79,6 +79,12 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Assert.notNull(fixUpTasks);
 	}
 
-	
+	@Test
+	 public void findAvgMinMaxStdDvtFixUpTasksTest() {
+	  Collection<Double> res = fixuptaskService.findAvgMinMaxStdDvtFixUpTasks();
+	  Assert.notNull(res);
+	  Assert.notEmpty(res);
+	  
+	 }
 
 }
