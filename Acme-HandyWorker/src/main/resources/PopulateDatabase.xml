@@ -3085,6 +3085,7 @@
 		<property name="fixUpTasks">
 			<list>
 				<ref bean="fixUpTask0" />
+				<ref bean="fixUpTask1" />
 			</list>
 		</property>
 		<property name="endorsements">
@@ -3128,6 +3129,7 @@
 		<property name="fixUpTasks">
 			<list>
 				<ref bean="fixUpTask2" />
+				<ref bean="fixUpTask3" />
 			</list>
 		</property>
 		<property name="endorsements">
@@ -3169,7 +3171,6 @@
 		</property>
 		<property name="fixUpTasks">
 			<list>
-				<ref bean="fixUpTask1" />
 			</list>
 		</property>
 		<property name="endorsements">
@@ -3210,7 +3211,6 @@
 		</property>
 		<property name="fixUpTasks">
 			<list>
-				<ref bean="fixUpTask3"/>
 			</list>
 		</property>
 		<property name="endorsements">

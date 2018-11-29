@@ -262,12 +262,12 @@ public class HandyWorkerService {
 			result = this.fixUpTaskService.save(fixUpTask);
 			Assert.notNull(result);
 			return result;
-		}else {
-		result = this.fixUpTaskService.findOne(fixUpTask.getId());
-		return result;
+		} else {
+			result = this.fixUpTaskService.findOne(fixUpTask.getId());
+			return result;
 		}
 	}
-	
+
 	public Application saveHandyWorkerApplication(final Application application, String comment) {
 		final Application result, saved;
 		Assert.notNull(application);
@@ -281,7 +281,8 @@ public class HandyWorkerService {
 
 		if (this.exists(application.getId()) && application.getStatus().equals("PENDING")
 				&& userAccount.getAuthorities().contains(authority)
-				&& applicationService.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application))
+				&& applicationService
+						.findApplicationsByCustomer(this.customerService.findCustomerByApplication(application))
 						.contains(application)) {
 			logedUserAccount = LoginService.getPrincipal();
 			Assert.notNull(logedUserAccount, "customer.notLogged ");
@@ -292,7 +293,7 @@ public class HandyWorkerService {
 			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
 				saved = this.applicationService.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
-				if(!comment.equals(null)) {
+				if (!comment.equals(null)) {
 					application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
 				}
 				result = this.applicationService.save(application);
@@ -300,7 +301,7 @@ public class HandyWorkerService {
 			} else {
 				saved = this.applicationService.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
-				if(!comment.equals(null)) {
+				if (!comment.equals(null)) {
 					application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
 				}
 				application.setStatus("ACCEPTED");
@@ -313,7 +314,6 @@ public class HandyWorkerService {
 			return result;
 		}
 	}
-
 
 	public List<FixUpTask> filter(String command, int maxResults) {
 		Query query = entitymanager.createQuery(

@@ -14,8 +14,8 @@ import org.springframework.util.Assert;
 
 import domain.Application;
 import domain.FixUpTask;
-import repositories.FixUpTaskRepository;
 import services.ApplicationService;
+import services.FixUpTaskService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
@@ -28,7 +28,7 @@ public class ApplicationServiceTest extends AbstractTest {
 	private ApplicationService applicationService;
 	
 	@Autowired
-	private FixUpTaskRepository fixUpTaskRepository;
+	private FixUpTaskService fixUpTaskService;
 
 	@Test
 	public void findAllApplicationTest() {
@@ -58,10 +58,48 @@ public class ApplicationServiceTest extends AbstractTest {
 	
 	@Test
 	public void findAcceptedHandyWorkerApplicationByFixUpTaskTest () {
-		FixUpTask fixUpTask = this.fixUpTaskRepository.findAllFixUpTaskWithAcceptedApplications().iterator().next();
+		FixUpTask fixUpTask = this.fixUpTaskService.findAllFixUpTaskWithAcceptedApplications().iterator().next();
 		Assert.notNull(fixUpTask);
 		Application res = this.applicationService.findAcceptedHandyWorkerApplicationByFixUpTask(fixUpTask);
 		Assert.isTrue(res.getStatus().equals("ACCEPTED"));
+	}
+	
+	@Test
+	public void findAvgMinMaxStrDvtApplicationPerFixUpTaskTest() {
+		Collection<Double> res = this.applicationService.findAvgMinMaxStrDvtApplicationPerFixUpTask();
+		Assert.notNull(res);
+		Assert.notEmpty(res);
+	}
+	
+	@Test
+	public void findAvgMinMaxStrDvtPerApplicationTest() {
+		Collection<Double> res = this.applicationService.findAvgMinMaxStrDvtPerApplication();
+		Assert.notNull(res);
+		Assert.notEmpty(res);
+	}
+	
+	@Test
+	public void ratioOfPendingApplicationsTest() {
+		Double res = this.applicationService.ratioOfPendingApplications();
+		Assert.notNull(res);
+	}
+	
+	@Test
+	public void ratioOfAcceptedApplicationsTest() {
+		Double res = this.applicationService.ratioOfAcceptedApplications();
+		Assert.notNull(res);
+	}
+	
+	@Test
+	public void ratioOfRejectedApplicationsTest() {
+		Double res = this.applicationService.ratioOfRejectedApplications();
+		Assert.notNull(res);
+	}
+	
+	@Test
+	public void ratioOfRejectedApplicationsCantChange() {
+		Double res = this.applicationService.ratioOfRejectedApplicationsCantChange();
+		Assert.notNull(res);
 	}
 
 }
