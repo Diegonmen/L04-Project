@@ -67,7 +67,7 @@ public class FixUpTaskService {
 
 	// Other business methods
 
-	public Collection<FixUpTask> findByCustomer(final Customer customer) {
+	public Collection<FixUpTask> findFixUpTasksByCustomer(final Customer customer) {
 		Assert.notNull(customer);
 		Assert.isTrue(this.customerService.exists(customer.getId()));
 

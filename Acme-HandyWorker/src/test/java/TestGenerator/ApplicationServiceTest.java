@@ -13,15 +13,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import domain.Application;
-import domain.CreditCard;
-import domain.Customer;
 import domain.FixUpTask;
-import domain.HandyWorker;
 import repositories.FixUpTaskRepository;
-import security.LoginService;
 import services.ApplicationService;
-import services.CustomerService;
-import services.HandyWorkerService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
@@ -35,65 +29,6 @@ public class ApplicationServiceTest extends AbstractTest {
 	
 	@Autowired
 	private FixUpTaskRepository fixUpTaskRepository;
-
-	@Autowired
-	private CustomerService customerService;
-	
-	@Autowired
-	private HandyWorkerService handyWorkerService;
-
-	@Test
-	public void saveApplicationCustomerTest() {
-		Application created;
-		Application saved;
-		Application copyCreated;
-		Customer customer;
-		super.authenticate("customer1");
-
-		customer = this.customerService.findCustomerByUserAccount(LoginService.getPrincipal());
-		for (final Application a : this.applicationService.findApplicationsByCustomer(customer)) {
-			if (a.getStatus().equals("PENDING")) {
-				created = a;
-				copyCreated = created;
-				copyCreated.setStatus("ACCEPTED");
-				final String comment = "Test Comment";
-				final CreditCard creditCard = new CreditCard();
-				creditCard.setBrandName("VISA");
-				creditCard.setCVV(123);
-				creditCard.setExpirationMonth(12);
-				creditCard.setExpirationYear(2020);
-				creditCard.setHolderName("Paco Asencio");
-				creditCard.setNumber("1234567812345678");
-				saved = this.applicationService.saveCustomer(copyCreated, comment, creditCard);
-				Assert.isTrue(this.applicationService.findAll().contains(saved));
-				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
-			}
-		}
-
-	}
-	
-	@Test
-	public void saveApplicationHandyWorkerTest() {
-		Application created;
-		Application saved;
-		Application copyCreated;
-		HandyWorker handyWorker;
-		super.authenticate("handyWorker1");
-
-		handyWorker = this.handyWorkerService.findHandyWorkerByUserAccount(LoginService.getPrincipal());
-		for (final Application a : this.applicationService.findApplicationsByHandyWorker(handyWorker)) {
-			if (a.getStatus().equals("PENDING")) {
-				String comment = "Comment Test";
-				created = a;
-				copyCreated = created;
-				copyCreated.setStatus("ACCEPTED");
-				saved = this.applicationService.saveHandyWorker(copyCreated, comment);
-				Assert.isTrue(this.applicationService.findAll().contains(saved));
-				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
-			}
-		}
-
-	}
 
 	@Test
 	public void findAllApplicationTest() {

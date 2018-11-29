@@ -12,8 +12,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import domain.Application;
+import domain.CreditCard;
 import domain.Customer;
 import domain.FixUpTask;
+import security.LoginService;
+import services.ApplicationService;
 import services.CustomerService;
 import services.FixUpTaskService;
 import utilities.AbstractTest;
@@ -30,6 +34,9 @@ public class CustomerServiceTest extends AbstractTest {
 	
 	@Autowired
 	private FixUpTaskService fixuptaskService;
+	
+	@Autowired
+	private ApplicationService applicationService;
 
 
 	@Test
@@ -101,6 +108,36 @@ public class CustomerServiceTest extends AbstractTest {
 		saved = this.customerService.saveCustomerFixUpTask(copyCreated);
 		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
 		Assert.isTrue(saved.getDescription().equals("Test"));
+	}
+	
+	@Test
+	public void saveApplicationCustomerTest() {
+		Application created;
+		Application saved;
+		Application copyCreated;
+		Customer customer;
+		super.authenticate("customer1");
+
+		customer = this.customerService.findCustomerByUserAccount(LoginService.getPrincipal());
+		for (final Application a : this.applicationService.findApplicationsByCustomer(customer)) {
+			if (a.getStatus().equals("PENDING")) {
+				created = a;
+				copyCreated = created;
+				copyCreated.setStatus("ACCEPTED");
+				final String comment = "Test Comment";
+				final CreditCard creditCard = new CreditCard();
+				creditCard.setBrandName("VISA");
+				creditCard.setCVV(123);
+				creditCard.setExpirationMonth(12);
+				creditCard.setExpirationYear(2020);
+				creditCard.setHolderName("Paco Asencio");
+				creditCard.setNumber("1234567812345678");
+				saved = this.customerService.saveCustomerApplication(copyCreated, comment, creditCard);
+				Assert.isTrue(this.applicationService.findAll().contains(saved));
+				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
+			}
+		}
+
 	}
 
 	private Customer copyCustomer(final Customer customer) {

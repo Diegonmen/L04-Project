@@ -75,7 +75,7 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Collection<FixUpTask> fixUpTasks;
 		final Customer customer = this.customerService.findAll().iterator().next();
 		Assert.notNull(customer);
-		fixUpTasks = this.fixuptaskService.findByCustomer(customer);
+		fixUpTasks = this.fixuptaskService.findFixUpTasksByCustomer(customer);
 		Assert.notNull(fixUpTasks);
 	}
 

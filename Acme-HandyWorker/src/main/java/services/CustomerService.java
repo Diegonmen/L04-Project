@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.util.Assert;
 import domain.Application;
 import domain.Box;
 import domain.Complaint;
+import domain.CreditCard;
 import domain.Customer;
 import domain.Endorsement;
 import domain.FixUpTask;
@@ -36,6 +38,9 @@ public class CustomerService {
 
 	@Autowired
 	private FixUpTaskService	fixUpTaskService;
+	
+	@Autowired
+	private ApplicationService applicationService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -222,5 +227,50 @@ public class CustomerService {
 			this.fixUpTaskService.delete(fixUpTask);
 	}
 	
-	
+
+	public Application saveCustomerApplication(final Application application, String comment, CreditCard creditCard) {
+		final Application result, saved;
+		Assert.notNull(application);
+		Assert.isTrue(application.getId() != 0);
+		final UserAccount userAccount = LoginService.getPrincipal();
+		final Date currentMoment = new Date(System.currentTimeMillis() - 1);
+		final Authority authority;
+		final UserAccount logedUserAccount;
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+
+		if (this.exists(application.getId()) && application.getStatus().equals("PENDING")
+				&& userAccount.getAuthorities().contains(authority)
+				&& applicationService.findApplicationsByCustomer(findCustomerByApplication(application))
+						.contains(application)) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "customer.notLogged ");
+			Assert.isTrue(
+					logedUserAccount
+							.equals(findCustomerByApplication(application).getUserAccount()),
+					"customer.notEqual.userAccount");
+			if (application.getApplicationMoment().compareTo(currentMoment) < 0) {
+				saved = applicationService.findOne(application.getId());
+				Assert.notNull(saved, "application.not.null");
+				application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
+				application.setStatus("REJECTED");
+				result = applicationService.save(application);
+				return result;
+			} else {
+				saved = applicationService.findOne(application.getId());
+				Assert.notNull(saved, "application.not.null");
+				if(!comment.equals(null)) {
+				application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
+				}
+				application.setCreditCard(creditCard);
+				application.setStatus("ACCEPTED");
+				result = applicationService.save(application);
+				return result;
+			}
+		} else {
+
+			result = applicationService.save(application);
+			return result;
+		}
+	}
 }

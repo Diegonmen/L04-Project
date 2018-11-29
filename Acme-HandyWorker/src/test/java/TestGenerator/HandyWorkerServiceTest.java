@@ -14,10 +14,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import domain.Application;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Phase;
+import security.LoginService;
+import services.ApplicationService;
 import services.CustomerService;
 import services.FixUpTaskService;
 import services.HandyWorkerService;
@@ -38,6 +41,9 @@ public class HandyWorkerServiceTest extends AbstractTest {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	@Autowired
+	private ApplicationService applicationService;
 
 
 	@Test
@@ -132,6 +138,29 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		phases.add(phase);
 		saved = this.handyworkerService.saveHandyWorkerFixUpTask(copyCreated, phases);
 		Assert.isTrue(this.fixUpTaskService.findAll().contains(saved));
+	}
+	
+	@Test
+	public void saveApplicationHandyWorkerTest() {
+		Application created;
+		Application saved;
+		Application copyCreated;
+		HandyWorker handyWorker;
+		super.authenticate("handyWorker1");
+
+		handyWorker = this.handyworkerService.findHandyWorkerByUserAccount(LoginService.getPrincipal());
+		for (final Application a : this.applicationService.findApplicationsByHandyWorker(handyWorker)) {
+			if (a.getStatus().equals("PENDING")) {
+				String comment = "Comment Test";
+				created = a;
+				copyCreated = created;
+				copyCreated.setStatus("ACCEPTED");
+				saved = this.handyworkerService.saveHandyWorkerApplication(copyCreated, comment);
+				Assert.isTrue(this.applicationService.findAll().contains(saved));
+				Assert.isTrue(saved.getStatus().equals("ACCEPTED"));
+			}
+		}
+
 	}
 	
 
