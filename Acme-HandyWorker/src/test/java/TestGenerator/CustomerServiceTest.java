@@ -17,12 +17,14 @@ import domain.Complaint;
 import domain.CreditCard;
 import domain.Customer;
 import domain.FixUpTask;
+import domain.Note;
 import domain.Report;
 import security.LoginService;
 import services.ApplicationService;
 import services.ComplaintService;
 import services.CustomerService;
 import services.FixUpTaskService;
+import services.NoteService;
 import services.ReportService;
 import utilities.AbstractTest;
 
@@ -48,6 +50,8 @@ public class CustomerServiceTest extends AbstractTest {
 	@Autowired
 	private ReportService reportService;
 
+	@Autowired
+	private NoteService noteService;
 
 	@Test
 	public void saveCustomerTest() {
@@ -230,5 +234,16 @@ public class CustomerServiceTest extends AbstractTest {
 		Report result;
 		result = this.customerService.findReport(report.getId());
 		Assert.notNull(result);
+	}
+	
+	@Test
+	public void saveNoteTest() {
+		Note note = noteService.findAll().iterator().next();
+		this.authenticate("useraccount1");
+		Customer customer = customerService.findCustomerByUserAccount(LoginService.getPrincipal());
+		Collection<Report> rep = reportService.findReportByCustomerUserAccount(customer.getUserAccount());
+		Report report = rep.iterator().next();
+		Note saved = customerService.saveNote(note, report);
+		Assert.notNull(saved);
 	}
 }

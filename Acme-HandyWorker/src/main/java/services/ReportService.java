@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 
 import domain.Report;
 import repositories.ReportRepository;
+import security.UserAccount;
 
 @Service
 @Transactional
@@ -45,6 +46,12 @@ public class ReportService {
 	public Collection<Report> findNotFinalModeReports() {
 		Collection<Report> res = reportrepository.findNotFinalModeReports();
 		Assert.notEmpty(res);
+		return res;
+	}
+	
+	public Collection<Report> findReportByCustomerUserAccount(UserAccount userAccount){
+		Collection<Report> res = reportrepository.findReportByCustomerUserAccountId(userAccount.getId());
+		Assert.notNull(res);
 		return res;
 	}
 }

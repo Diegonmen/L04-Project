@@ -17,11 +17,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Report extends DomainEntity {
 
-	private Date				moment;
-	private String				description;
-	private Collection<String>	attachments;
+	private Date moment;
+	private String description;
+	private Collection<String> attachments;
 	private boolean finalMode;
-
 
 	@Past
 	@Temporal(TemporalType.TIMESTAMP)
@@ -51,7 +50,7 @@ public class Report extends DomainEntity {
 	public void setAttachments(final Collection<String> attachment) {
 		this.attachments = attachment;
 	}
-	
+
 	public boolean isFinalMode() {
 		return this.finalMode;
 	}
@@ -60,14 +59,10 @@ public class Report extends DomainEntity {
 		this.finalMode = finalMode;
 	}
 
-
 	// Relationships ----------------------------------------------------------
 
-	
-
-	private Collection<Complaint>	complaints;
-	private Collection<Note>		notes;
-
+	private Collection<Complaint> complaints;
+	private Collection<Note> notes;
 
 	@OneToMany
 	public Collection<Complaint> getComplaints() {
