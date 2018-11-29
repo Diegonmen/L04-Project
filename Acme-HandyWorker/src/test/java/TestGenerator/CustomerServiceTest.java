@@ -183,4 +183,10 @@ public class CustomerServiceTest extends AbstractTest {
 		result.setVersion(fixUpTask.getVersion());
 		return result;
 	}
+	
+	@Test
+	public void customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerService.customersWith10PercentMoreAvgFixUpTask();
+		Assert.notNull(res);
+	}
 }

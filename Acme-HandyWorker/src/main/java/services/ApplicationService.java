@@ -105,4 +105,34 @@ public class ApplicationService {
 		Assert.isTrue(res.getStatus().equals("ACCEPTED"));
 		return res;
 	}
+	
+	public Collection<Double> findAvgMinMaxStrDvtApplicationPerFixUpTask() {
+		Collection<Double> res = applicationRepository.findAvgMinMaxStrDvtApplicationPerFixUpTask();
+		return res;
+	}
+	
+	public Collection<Double> findAvgMinMaxStrDvtPerApplication() {
+		Collection<Double> res = applicationRepository.findAvgMinMaxStrDvtPerApplication();
+		return res;
+	}
+	
+	public Double ratioOfPendingApplications() {
+		Double res = this.applicationRepository.ratioOfPendingApplications();
+		return res;
+	}
+	
+	public Double ratioOfAcceptedApplications() {
+		Double res = this.applicationRepository.ratioOfAcceptedApplications();
+		return res;
+	}
+	
+	public Double ratioOfRejectedApplications() {
+		Double res = this.applicationRepository.ratioOfRejectedApplications();
+		return res;
+	}
+	
+	public Double ratioOfRejectedApplicationsCantChange() {
+		Double res = this.applicationRepository.ratioOfRejectedApplicationsCantChange();
+		return res;
+	}
 }

@@ -135,28 +135,6 @@ public class AdministratorServiceTest extends AbstractTest {
 		return result;
 	}
 	
-	private Customer copyCustomer(final Customer customer) {
-		Customer result;
-
-		result = new Customer();
-		result.setAddress(customer.getAddress());
-		result.setEmail(customer.getEmail());
-		result.setId(customer.getId());
-		result.setName(customer.getName());
-		result.setMiddleName(customer.getMiddleName());
-		result.setPhoneNumber(customer.getPhoneNumber());
-		result.setSurname(customer.getSurname());
-		result.setBoxes(customer.getBoxes());
-		result.setComplaints(customer.getComplaints());
-		result.setPhoto(customer.getPhoto());
-		result.setSocialIdentity(customer.getSocialIdentity());
-		result.setEndorsements(customer.getEndorsements());
-		result.setSuspicious(customer.isSuspicious());
-		result.setUserAccount(customer.getUserAccount());
-		result.setVersion(customer.getVersion());
-
-		return result;
-	}
 	
 	@Test
 	public void saveWarrantyTest() {

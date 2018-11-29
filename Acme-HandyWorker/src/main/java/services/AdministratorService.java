@@ -15,6 +15,8 @@ import domain.Actor;
 import domain.Administrator;
 import domain.Box;
 import domain.Category;
+import domain.Customer;
+import domain.HandyWorker;
 import domain.Message;
 import domain.SocialIdentity;
 import domain.Warranty;
@@ -48,6 +50,18 @@ public class AdministratorService {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private FixUpTaskService fixUpTaskService;
+	
+	@Autowired
+	private ApplicationService applicationService;
+	
+	@Autowired
+	private CustomerService customerService;
+	
+	@Autowired
+	private HandyWorkerService handyWorkerService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -289,6 +303,56 @@ public class AdministratorService {
 		logedUserAccount = LoginService.getPrincipal();
 		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
 		categoryService.delete(category);
+	}
+	
+	public Collection<Double> findAvgMinMaxStdDvtFixUpTasksPerUser() {
+		Collection<Double> res = fixUpTaskService.findAvgMinMaxStdDvtFixUpTasksPerUser();
+		return res;
+	}
+	
+	public Collection<Double> findAvgMinMaxStrDvtApplicationPerFixUpTask() {
+		Collection<Double> res = applicationService.findAvgMinMaxStrDvtApplicationPerFixUpTask();
+		return res;
+	}
+	
+	public Collection<Double> findAvgMinMaxStrDvtPerFixUpTask() {
+		Collection<Double> res = fixUpTaskService.findAvgMinMaxStrDvtPerFixUpTask();
+		return res;
+	}
+	
+	public Collection<Double> findAvgMinMaxStrDvtPerApplication() {
+		Collection<Double> res = applicationService.findAvgMinMaxStrDvtPerApplication();
+		return res;
+	}
+	
+	public Double ratioOfPendingApplications() {
+		Double res = this.applicationService.ratioOfPendingApplications();
+		return res;
+	}
+	
+	public Double ratioOfAcceptedApplications() {
+		Double res = this.applicationService.ratioOfAcceptedApplications();
+		return res;
+	}
+	
+	public Double ratioOfRejectedApplications() {
+		Double res = this.applicationService.ratioOfRejectedApplications();
+		return res;
+	}
+	
+	public Double ratioOfRejectedApplicationsCantChange() {
+		Double res = this.applicationService.ratioOfRejectedApplicationsCantChange();
+		return res;
+	}
+	
+	public Collection<Customer> customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerService.customersWith10PercentMoreAvgFixUpTask();
+		return res;
+	}
+	
+	public Collection<HandyWorker> handyWorkersWith10PercentMoreAvgApplicatios() {
+		Collection<HandyWorker> res = this.handyWorkerService.handyWorkersWith10PercentMoreAvgApplicatios();
+		return res;
 	}
 
 }

@@ -298,4 +298,9 @@ public class CustomerService {
 			return result;
 		}
 	}
+	
+	public Collection<Customer> customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerRepository.customersWith10PercentMoreAvgFixUpTask();
+		return res;
+	}
 }

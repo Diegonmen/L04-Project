@@ -27,11 +27,8 @@ public class FixUpTaskService {
 	@Autowired
 	private CustomerService customerService;
 
-	
-
 	// Simple CRUD methods ----------------------------------------------------
 
-	
 	public FixUpTask save(FixUpTask entity) {
 		return fixUpTaskRepository.save(entity);
 	}
@@ -63,18 +60,22 @@ public class FixUpTaskService {
 
 		return result;
 	}
-	
-	public Collection<FixUpTask> findAllFixUpTaskWithAcceptedApplications(){
+
+	public Collection<FixUpTask> findAllFixUpTaskWithAcceptedApplications() {
 		Collection<FixUpTask> res;
 		res = fixUpTaskRepository.findAllFixUpTaskWithAcceptedApplications();
 		Assert.notEmpty(res);
 		return res;
 	}
 
+	public Collection<Double> findAvgMinMaxStdDvtFixUpTasksPerUser() {
+		Collection<Double> res = fixUpTaskRepository.findAvgMinMaxStrDvtFixUpTaskPerUser();
+		return res;
+	}
 	
-	public Collection<Double> findAvgMinMaxStdDvtFixUpTasks() {
-		  Collection<Double> res = fixUpTaskRepository.findFixUpTaskAvgMinMaxStrDvt();
-		  return res;
-		 }
+	public Collection<Double> findAvgMinMaxStrDvtPerFixUpTask() {
+		Collection<Double> res = fixUpTaskRepository.findAvgMinMaxStrDvtPerFixUpTask();
+		return res;
+	}
 
 }

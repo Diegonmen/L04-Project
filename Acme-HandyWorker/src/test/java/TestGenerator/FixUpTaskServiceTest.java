@@ -20,27 +20,25 @@ import services.FixUpTaskService;
 import services.HandyWorkerService;
 import utilities.AbstractTest;
 
-@ContextConfiguration(locations = {
-	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
-})
+@ContextConfiguration(locations = { "classpath:spring/junit.xml", "classpath:spring/datasource.xml",
+		"classpath:spring/config/packages.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class FixUpTaskServiceTest extends AbstractTest {
 
 	@Autowired
-	private FixUpTaskService	fixuptaskService;
+	private FixUpTaskService fixuptaskService;
 	@Autowired
-	private CustomerService		customerService;
+	private CustomerService customerService;
 	@Autowired
 	private HandyWorkerService handyWorkerService;
 
 	@Test
 	public void findFixUpTask() {
 		List<FixUpTask> list = handyWorkerService.filter("970203", 10);
-		
+
 		Assert.isTrue(!list.isEmpty());
 	}
-
 
 	@Test
 	public void findAllFixUpTaskTest() {
@@ -53,9 +51,9 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	@Test
 	public void findOneFixUpTaskTest() {
 		FixUpTask result;
-		
+
 		final FixUpTask fixuptask = this.fixuptaskService.findAll().iterator().next();
-		
+
 		this.authenticate(this.customerService.findCustomerByFixUpTask(fixuptask).getUserAccount().getUsername());
 		Assert.isTrue(fixuptask.getId() != 0);
 		Assert.isTrue(this.fixuptaskService.exists(fixuptask.getId()));
@@ -83,11 +81,17 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	}
 
 	@Test
-	 public void findAvgMinMaxStdDvtFixUpTasksTest() {
-	  Collection<Double> res = fixuptaskService.findAvgMinMaxStdDvtFixUpTasks();
-	  Assert.notNull(res);
-	  Assert.notEmpty(res);
-	  
-	 }
+	public void findAvgMinMaxStdDvtFixUpTasksTest() {
+		Collection<Double> res = this.fixuptaskService.findAvgMinMaxStdDvtFixUpTasksPerUser();
+		Assert.notNull(res);
+		Assert.notEmpty(res);
+	}
+	
+	@Test
+	public void findAvgMinMaxStrDvtPerFixUpTaskTest() {
+		Collection<Double> res = this.fixuptaskService.findAvgMinMaxStrDvtPerFixUpTask();
+		Assert.notNull(res);
+		Assert.notEmpty(res);
+	}
 
 }

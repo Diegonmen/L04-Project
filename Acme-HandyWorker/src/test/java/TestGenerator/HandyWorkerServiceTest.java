@@ -212,4 +212,10 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		result.setVersion(fixUpTask.getVersion());
 		return result;
 	}
+	
+	@Test
+	public void handyWorkersWith10PercentMoreAvgApplicatiosTest() {
+		Collection<HandyWorker> res = this.handyworkerService.handyWorkersWith10PercentMoreAvgApplicatios();
+		Assert.notNull(res);
+	}
 }
