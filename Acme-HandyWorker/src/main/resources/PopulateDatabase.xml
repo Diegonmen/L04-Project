@@ -2236,6 +2236,22 @@
 		<property name="finalMode" value="true">
 		</property>
 	</bean>
+	
+	<bean id="warranty3" class="domain.Warranty">
+		<property name="title" value="warrantyTitle3" />
+		<property name="terms" value="warrantyTerms3" />
+		<property name="applicableLaws" value="applicableLaws3" />
+		<property name="finalMode" value="true">
+		</property>
+	</bean>
+	
+	<bean id="warranty4" class="domain.Warranty">
+		<property name="title" value="warrantyTitle4" />
+		<property name="terms" value="warrantyTerms4" />
+		<property name="applicableLaws" value="applicableLaws4" />
+		<property name="finalMode" value="false">
+		</property>
+	</bean>
 
 	<!-- Category -->
 

@@ -101,7 +101,7 @@ public class ApplicationService {
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
 				if(!comment.equals(null)) {
-				application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+				application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
 				}
 				application.setCreditCard(creditCard);
 				application.setStatus("ACCEPTED");
@@ -141,7 +141,7 @@ public class ApplicationService {
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
 				if(!comment.equals(null)) {
-					application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+					application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
 				}
 				result = this.applicationRepository.save(application);
 				return result;
@@ -150,7 +150,7 @@ public class ApplicationService {
 				saved = this.applicationRepository.findOne(application.getId());
 				Assert.notNull(saved, "application.not.null");
 				if(!comment.equals(null)) {
-					application.getComments().add(logedUserAccount.getUsername().toString() + comment);
+					application.getComments().add(logedUserAccount.getUsername() + ": - " + comment);
 				}
 				application.setStatus("ACCEPTED");
 				result = this.applicationRepository.save(application);
