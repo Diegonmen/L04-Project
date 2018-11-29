@@ -27,27 +27,26 @@ import services.ReportService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
-	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
-})
+	"classpath:spring/junit.xml", "classpath:spring/datasource.xml",
+		"classpath:spring/config/packages.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class CustomerServiceTest extends AbstractTest {
 
 	@Autowired
-	private CustomerService	customerService;
-	
+	private CustomerService customerService;
+
 	@Autowired
 	private FixUpTaskService fixuptaskService;
-	
+
 	@Autowired
 	private ApplicationService applicationService;
-	
+
 	@Autowired
 	private ComplaintService complaintService;
-	
+
 	@Autowired
 	private ReportService reportService;
-
 
 	@Test
 	public void saveCustomerTest() {
@@ -105,7 +104,7 @@ public class CustomerServiceTest extends AbstractTest {
 		Assert.isNull(customer.getMiddleName());
 		Assert.isNull(customer.getSurname());
 	}
-	
+
 	@Test
 	public void saveCustomerFixUpTaskTest() {
 		final FixUpTask created;
@@ -119,7 +118,7 @@ public class CustomerServiceTest extends AbstractTest {
 		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
 		Assert.isTrue(saved.getDescription().equals("Test"));
 	}
-	
+
 	@Test
 	public void saveApplicationCustomerTest() {
 		Application created;
@@ -172,7 +171,7 @@ public class CustomerServiceTest extends AbstractTest {
 
 		return result;
 	}
-	
+
 	private FixUpTask copyFixUpTask(final FixUpTask fixUpTask) {
 		FixUpTask result;
 
@@ -193,7 +192,7 @@ public class CustomerServiceTest extends AbstractTest {
 		result.setVersion(fixUpTask.getVersion());
 		return result;
 	}
-	
+
 	@Test
 	public void saveComplaintTest() {
 		Complaint complaint, saved;
@@ -222,7 +221,7 @@ public class CustomerServiceTest extends AbstractTest {
 		result = this.complaintService.findOne(complaintId);
 		Assert.notNull(result);
 	}
-	
+
 	@Test
 	public void findOneReportTest() {
 		final Report report = this.reportService.findNotFinalModeReports().iterator().next();
@@ -230,5 +229,11 @@ public class CustomerServiceTest extends AbstractTest {
 		Report result;
 		result = this.customerService.findReport(report.getId());
 		Assert.notNull(result);
+	}
+
+	@Test
+	public void customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerService.customersWith10PercentMoreAvgFixUpTask();
+		Assert.notNull(res);
 	}
 }

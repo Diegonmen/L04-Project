@@ -337,4 +337,9 @@ public class CustomerService {
 		Assert.isTrue(res.isFinalMode()==false);
 		return res;
 	}
+	
+	public Collection<Customer> customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerRepository.customersWith10PercentMoreAvgFixUpTask();
+		return res;
+	}
 }

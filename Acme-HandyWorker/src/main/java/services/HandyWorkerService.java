@@ -52,7 +52,7 @@ public class HandyWorkerService {
 
 	@Autowired
 	private ApplicationService applicationService;
-	
+
 	@Autowired
 	private ReportService reportService;
 
@@ -325,12 +325,17 @@ public class HandyWorkerService {
 
 		return fixuptask;
 	}
-	
+
 	public Report findReport(int reportId) {
 		Assert.notNull(reportId);
 		Assert.isTrue(reportService.exists(reportId));
 		Report res = reportService.findOne(reportId);
-		Assert.isTrue(res.isFinalMode()==false);
+		Assert.isTrue(res.isFinalMode() == false);
+		return res;
+	}
+
+	public Collection<HandyWorker> handyWorkersWith10PercentMoreAvgApplicatios() {
+		Collection<HandyWorker> res = this.handyWorkerRepository.handyWorkersWith10PercentMoreAvgApplicatios();
 		return res;
 	}
 }
