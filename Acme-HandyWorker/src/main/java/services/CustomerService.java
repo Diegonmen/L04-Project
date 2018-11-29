@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -156,4 +157,70 @@ public class CustomerService {
 		
 		return res;
 	}
+	
+	public FixUpTask findOneFixUptask(final int fixUpTaskId) {
+		Assert.isTrue(fixUpTaskId != 0);
+		final UserAccount logedUserAccount;
+		Authority authority;
+		FixUpTask result;
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+
+		result = this.fixUpTaskService.findOne(fixUpTaskId);
+		Assert.notNull(result);
+		Assert.isTrue(findCustomerByFixUpTask(result).getUserAccount().equals(logedUserAccount));
+
+		return result;
+	}
+
+	public List<FixUpTask> findAllFixUpTask() {
+		return fixUpTaskService.findAll();
+	}
+
+	public FixUpTask saveCustomerFixUpTask(final FixUpTask fixUpTask) {
+		FixUpTask result, saved;
+		final UserAccount logedUserAccount;
+		Authority authority;
+
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		Assert.notNull(fixUpTask, "fixUpTask.not.null");
+		final Customer customer = findCustomerByFixUpTask(fixUpTask);
+
+		if (this.exists(fixUpTask.getId())) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "customer.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(customer.getUserAccount()), "customer.notEqual.userAccount");
+			saved = this.fixUpTaskService.findOne(fixUpTask.getId());
+			Assert.notNull(saved, "fixUpTask.not.null");
+			Assert.isTrue(customer.getUserAccount().isAccountNonLocked() && !(customer.isSuspicious()),
+					"customer.notEqual.accountOrSuspicious");
+			result = this.fixUpTaskService.save(fixUpTask);
+			Assert.notNull(result);
+
+		} else {
+			result = this.fixUpTaskService.save(fixUpTask);
+			Assert.notNull(result);
+		}
+		return result;
+
+	}
+	
+	public void deleteFixUpTask(final FixUpTask fixUpTask) {
+		Assert.isTrue(fixUpTask.getId() != 0);
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		Assert.isTrue(
+			findCustomerByFixUpTask(fixUpTask).getUserAccount().equals(logedUserAccount));
+			this.fixUpTaskService.delete(fixUpTask);
+	}
+	
+	
 }

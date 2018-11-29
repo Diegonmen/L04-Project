@@ -2,13 +2,10 @@
 package TestGenerator;
 
 import java.util.Collection;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +15,8 @@ import org.springframework.util.Assert;
 
 import domain.Customer;
 import domain.FixUpTask;
-import domain.Phase;
 import services.CustomerService;
 import services.FixUpTaskService;
-import services.HandyWorkerService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
@@ -35,48 +30,12 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	private FixUpTaskService	fixuptaskService;
 	@Autowired
 	private CustomerService		customerService;
-	@Autowired
-	private HandyWorkerService handyWorkerService;
 
 	@Test
 	public void findFixUpTask() {
 		List<FixUpTask> list = fixuptaskService.filter("970203", 10);
 		
 		Assert.isTrue(!list.isEmpty());
-	}
-
-	@Test
-	public void saveCustomerFixUpTaskTest() {
-		final FixUpTask created;
-		final FixUpTask saved;
-		final FixUpTask copyCreated;
-		created = this.fixuptaskService.findAll().iterator().next();
-		this.authenticate(this.customerService.findCustomerByFixUpTask(created).getUserAccount().getUsername());
-		copyCreated = this.copyFixUpTask(created);
-		copyCreated.setDescription("Test");
-		saved = this.fixuptaskService.saveCustomer(copyCreated);
-		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
-		Assert.isTrue(saved.getDescription().equals("Test"));
-	}
-	
-	@Test
-	public void saveHandyWorkerFixUpTaskTest() {
-		final FixUpTask created;
-		final FixUpTask saved;
-		final FixUpTask copyCreated;
-		created = this.fixuptaskService.findAll().iterator().next();
-		Assert.notNull(created);
-		this.authenticate(this.handyWorkerService.findByFixUpTask(created).getUserAccount().getUsername());
-		copyCreated = this.copyFixUpTask(created);
-		copyCreated.setDescription("Test");
-		Collection<Phase> phases = new LinkedList<>();
-		Phase phase = new Phase();
-		phase.setDescription("Description");
-		phase.setTitle("Title");
-		phases.add(phase);
-		saved = this.fixuptaskService.saveHandyWorker(copyCreated, phases);
-		Assert.isTrue(this.fixuptaskService.findAll().contains(saved));
-		Assert.isTrue(saved.getDescription().equals("Test"));
 	}
 
 
@@ -120,25 +79,6 @@ public class FixUpTaskServiceTest extends AbstractTest {
 		Assert.notNull(fixUpTasks);
 	}
 
-	private FixUpTask copyFixUpTask(final FixUpTask fixUpTask) {
-		FixUpTask result;
-
-		result = new FixUpTask();
-		result.setAddress(fixUpTask.getAddress());
-		result.setApplications(fixUpTask.getApplications());
-		result.setCategory(fixUpTask.getCategory());
-		result.setComplaints(fixUpTask.getComplaints());
-		result.setDescription(fixUpTask.getDescription());
-		result.setEndDate(fixUpTask.getEndDate());
-		result.setMaxPrice(fixUpTask.getMaxPrice());
-		result.setId(fixUpTask.getId());
-		result.setPhases(fixUpTask.getPhases());
-		result.setPublicationMoment(fixUpTask.getPublicationMoment());
-		result.setStartDate(fixUpTask.getStartDate());
-		result.setTicker(fixUpTask.getTicker());
-		result.setWarranty(fixUpTask.getWarranty());
-		result.setVersion(fixUpTask.getVersion());
-		return result;
-	}
+	
 
 }

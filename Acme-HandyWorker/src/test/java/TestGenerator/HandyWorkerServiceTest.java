@@ -17,6 +17,7 @@ import org.springframework.util.Assert;
 import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
+import domain.Phase;
 import services.CustomerService;
 import services.FixUpTaskService;
 import services.HandyWorkerService;
@@ -114,6 +115,25 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		fixUpTasks = handyworkerService.allCustomerFixUpTask(customer);
 		Assert.notNull(fixUpTasks);
 	}
+	
+	@Test
+	public void saveHandyWorkerFixUpTaskTest() {
+		final FixUpTask created;
+		final FixUpTask saved;
+		final FixUpTask copyCreated;
+		created = this.fixUpTaskService.findAllFixUpTaskWithAcceptedApplications().iterator().next();
+		Assert.notNull(created);
+		this.authenticate(this.handyworkerService.findByFixUpTask(created).getUserAccount().getUsername());
+		copyCreated = this.copyFixUpTask(created);;
+		Collection<Phase> phases = new LinkedList<>();
+		Phase phase = new Phase();
+		phase.setDescription("Description");
+		phase.setTitle("Title");
+		phases.add(phase);
+		saved = this.handyworkerService.saveHandyWorkerFixUpTask(copyCreated, phases);
+		Assert.isTrue(this.fixUpTaskService.findAll().contains(saved));
+	}
+	
 
 	private HandyWorker copyHandyWorker(final HandyWorker handyWorker) {
 		HandyWorker result;
@@ -139,6 +159,28 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		result.setUserAccount(handyWorker.getUserAccount());
 		result.setVersion(handyWorker.getVersion());
 
+		return result;
+		
+	}
+	
+	private FixUpTask copyFixUpTask(final FixUpTask fixUpTask) {
+		FixUpTask result;
+
+		result = new FixUpTask();
+		result.setAddress(fixUpTask.getAddress());
+		result.setApplications(fixUpTask.getApplications());
+		result.setCategory(fixUpTask.getCategory());
+		result.setComplaints(fixUpTask.getComplaints());
+		result.setDescription(fixUpTask.getDescription());
+		result.setEndDate(fixUpTask.getEndDate());
+		result.setMaxPrice(fixUpTask.getMaxPrice());
+		result.setId(fixUpTask.getId());
+		result.setPhases(fixUpTask.getPhases());
+		result.setPublicationMoment(fixUpTask.getPublicationMoment());
+		result.setStartDate(fixUpTask.getStartDate());
+		result.setTicker(fixUpTask.getTicker());
+		result.setWarranty(fixUpTask.getWarranty());
+		result.setVersion(fixUpTask.getVersion());
 		return result;
 	}
 }

@@ -27,7 +27,7 @@
 
 	<import resource="config/packages.xml" />
 
-	<context:annotation-config />
+ <context:annotation-config />
 
 	<mvc:annotation-driven validator="validator"
 		conversion-service="conversionService" />
