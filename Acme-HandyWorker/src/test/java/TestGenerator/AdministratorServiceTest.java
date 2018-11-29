@@ -15,12 +15,16 @@ import org.springframework.util.Assert;
 import domain.Administrator;
 import domain.Category;
 import domain.Customer;
+import domain.Referee;
+import domain.Sponsor;
 import domain.Warranty;
 import security.UserAccount;
 import services.AdministratorService;
 import services.CategoryService;
 import services.CustomerService;
 import services.FixUpTaskService;
+import services.RefereeService;
+import services.SponsorService;
 import services.WarrantyService;
 import utilities.AbstractTest;
 
@@ -45,6 +49,12 @@ public class AdministratorServiceTest extends AbstractTest {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private RefereeService refereeService;
+	
+	@Autowired
+	private SponsorService sponsorService;
 
 
 	@Test
@@ -135,28 +145,50 @@ public class AdministratorServiceTest extends AbstractTest {
 		return result;
 	}
 	
-	private Customer copyCustomer(final Customer customer) {
-		Customer result;
+	private Referee copyReferee(final Referee referee) {
+		Referee result;
 
-		result = new Customer();
-		result.setAddress(customer.getAddress());
-		result.setEmail(customer.getEmail());
-		result.setId(customer.getId());
-		result.setName(customer.getName());
-		result.setMiddleName(customer.getMiddleName());
-		result.setPhoneNumber(customer.getPhoneNumber());
-		result.setSurname(customer.getSurname());
-		result.setBoxes(customer.getBoxes());
-		result.setComplaints(customer.getComplaints());
-		result.setPhoto(customer.getPhoto());
-		result.setSocialIdentity(customer.getSocialIdentity());
-		result.setEndorsements(customer.getEndorsements());
-		result.setSuspicious(customer.isSuspicious());
-		result.setUserAccount(customer.getUserAccount());
-		result.setVersion(customer.getVersion());
+		result = new Referee();
+		result.setAddress(referee.getAddress());
+		result.setEmail(referee.getEmail());
+		result.setId(referee.getId());
+		result.setName(referee.getName());
+		result.setMiddleName(referee.getMiddleName());
+		result.setPhoneNumber(referee.getPhoneNumber());
+		result.setSurname(referee.getSurname());
+		result.setBoxes(referee.getBoxes());
+		result.setPhoto(referee.getPhoto());
+		result.setSocialIdentity(referee.getSocialIdentity());
+		result.setSuspicious(referee.isSuspicious());
+		result.setUserAccount(referee.getUserAccount());
+		result.setReports(referee.getReports());
+		result.setVersion(referee.getVersion());
 
 		return result;
 	}
+	
+	private Sponsor copySponsor(final Sponsor sponsor) {
+		Sponsor result;
+
+		result = new Sponsor();
+		result.setAddress(sponsor.getAddress());
+		result.setEmail(sponsor.getEmail());
+		result.setId(sponsor.getId());
+		result.setName(sponsor.getName());
+		result.setMiddleName(sponsor.getMiddleName());
+		result.setPhoneNumber(sponsor.getPhoneNumber());
+		result.setSurname(sponsor.getSurname());
+		result.setBoxes(sponsor.getBoxes());
+		result.setPhoto(sponsor.getPhoto());
+		result.setSocialIdentity(sponsor.getSocialIdentity());
+		result.setSuspicious(sponsor.isSuspicious());
+		result.setUserAccount(sponsor.getUserAccount());
+		result.setSponsorships(sponsor.getSponsorships());
+		result.setVersion(sponsor.getVersion());
+
+		return result;
+	}
+
 	
 	@Test
 	public void saveWarrantyTest() {
@@ -237,6 +269,37 @@ public class AdministratorServiceTest extends AbstractTest {
 		Assert.isTrue(this.categoryService.exists(category.getId()));
 		this.categoryService.delete(category);
 	}
+	
+	@Test
+	public void saveRefereeTest() {
+		Referee created;
+		Referee saved;
+		Referee copyCreated;
+
+		created = this.refereeService.findAll().iterator().next();
+		this.authenticate(created.getUserAccount().getUsername());
+		copyCreated = this.copyReferee(created);
+		copyCreated.setName("Testreferee");
+		saved = this.refereeService.save(copyCreated);
+		Assert.isTrue(this.refereeService.findAll().contains(saved));
+		Assert.isTrue(saved.getName().equals("Testreferee"));
+	}
+	
+	@Test
+	public void saveSponsorTest() {
+		Sponsor created;
+		Sponsor saved;
+		Sponsor copyCreated;
+
+		created = this.sponsorService.findAll().iterator().next();
+		this.authenticate(created.getUserAccount().getUsername());
+		copyCreated = this.copySponsor(created);
+		copyCreated.setName("TestSponsor");
+		saved = this.sponsorService.save(copyCreated);
+		Assert.isTrue(this.sponsorService.findAll().contains(saved));
+		Assert.isTrue(saved.getName().equals("TestSponsor"));
+	}
+
 
 
 }

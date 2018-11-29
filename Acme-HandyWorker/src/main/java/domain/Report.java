@@ -20,6 +20,7 @@ public class Report extends DomainEntity {
 	private Date				moment;
 	private String				description;
 	private Collection<String>	attachments;
+	private boolean finalMode;
 
 
 	@Past
@@ -50,9 +51,19 @@ public class Report extends DomainEntity {
 	public void setAttachments(final Collection<String> attachment) {
 		this.attachments = attachment;
 	}
+	
+	public boolean isFinalMode() {
+		return this.finalMode;
+	}
+
+	public void setFinalMode(boolean finalMode) {
+		this.finalMode = finalMode;
+	}
 
 
 	// Relationships ----------------------------------------------------------
+
+	
 
 	private Collection<Complaint>	complaints;
 	private Collection<Note>		notes;

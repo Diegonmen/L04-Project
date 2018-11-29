@@ -12,9 +12,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
+import domain.Sponsor;
 import services.SponsorService;
 import utilities.AbstractTest;
-import domain.Sponsor;
 
 @ContextConfiguration(locations = {
 	"classpath:spring/junit.xml", "classpath:spring/datasource.xml", "classpath:spring/config/packages.xml"
@@ -26,7 +26,6 @@ public class SponsorServiceTest extends AbstractTest {
 	@Autowired
 	private SponsorService	sponsorService;
 
-
 	@Test
 	public void saveSponsorTest() {
 		Sponsor created;
@@ -36,12 +35,34 @@ public class SponsorServiceTest extends AbstractTest {
 		created = this.sponsorService.findAll().iterator().next();
 		this.authenticate(created.getUserAccount().getUsername());
 		copyCreated = this.copySponsor(created);
-		copyCreated.setName("TestSponsor");
+		copyCreated.setName("Testadministrator");
 		saved = this.sponsorService.save(copyCreated);
 		Assert.isTrue(this.sponsorService.findAll().contains(saved));
-		Assert.isTrue(saved.getName().equals("TestSponsor"));
+		Assert.isTrue(saved.getName().equals("Testadministrator"));
 	}
 
+	private Sponsor copySponsor(final Sponsor sponsor) {
+		Sponsor result;
+
+		result = new Sponsor();
+		result.setAddress(sponsor.getAddress());
+		result.setEmail(sponsor.getEmail());
+		result.setId(sponsor.getId());
+		result.setName(sponsor.getName());
+		result.setMiddleName(sponsor.getMiddleName());
+		result.setPhoneNumber(sponsor.getPhoneNumber());
+		result.setSurname(sponsor.getSurname());
+		result.setBoxes(sponsor.getBoxes());
+		result.setPhoto(sponsor.getPhoto());
+		result.setSocialIdentity(sponsor.getSocialIdentity());
+		result.setSuspicious(sponsor.isSuspicious());
+		result.setUserAccount(sponsor.getUserAccount());
+		result.setSponsorships(sponsor.getSponsorships());
+		result.setVersion(sponsor.getVersion());
+
+		return result;
+	}
+	
 	@Test
 	public void findAllSponsorTest() {
 		Collection<Sponsor> result;
@@ -83,26 +104,5 @@ public class SponsorServiceTest extends AbstractTest {
 		Assert.isNull(sponsor.getSurname());
 	}
 
-	private Sponsor copySponsor(final Sponsor sponsor) {
-		Sponsor result;
-
-		result = new Sponsor();
-		result.setAddress(sponsor.getAddress());
-		result.setEmail(sponsor.getEmail());
-		result.setId(sponsor.getId());
-		result.setName(sponsor.getName());
-		result.setMiddleName(sponsor.getMiddleName());
-		result.setPhoneNumber(sponsor.getPhoneNumber());
-		result.setSurname(sponsor.getSurname());
-		result.setBoxes(sponsor.getBoxes());
-		result.setPhoto(sponsor.getPhoto());
-		result.setSocialIdentity(sponsor.getSocialIdentity());
-		result.setSuspicious(sponsor.isSuspicious());
-		result.setUserAccount(sponsor.getUserAccount());
-		result.setSponsorships(sponsor.getSponsorships());
-		result.setVersion(sponsor.getVersion());
-
-		return result;
-	}
-
+	
 }

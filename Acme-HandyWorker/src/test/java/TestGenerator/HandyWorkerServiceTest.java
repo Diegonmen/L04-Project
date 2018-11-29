@@ -19,11 +19,13 @@ import domain.Customer;
 import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Phase;
+import domain.Report;
 import security.LoginService;
 import services.ApplicationService;
 import services.CustomerService;
 import services.FixUpTaskService;
 import services.HandyWorkerService;
+import services.ReportService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
@@ -44,6 +46,9 @@ public class HandyWorkerServiceTest extends AbstractTest {
 	
 	@Autowired
 	private ApplicationService applicationService;
+	
+	@Autowired
+	private ReportService reportService;
 
 
 	@Test
@@ -211,5 +216,14 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		result.setWarranty(fixUpTask.getWarranty());
 		result.setVersion(fixUpTask.getVersion());
 		return result;
+	}
+	
+	@Test
+	public void findOneReportTest() {
+		final Report report = this.reportService.findNotFinalModeReports().iterator().next();
+		Assert.notNull(report);
+		Report result;
+		result = this.handyworkerService.findReport(report.getId());
+		Assert.notNull(result);
 	}
 }

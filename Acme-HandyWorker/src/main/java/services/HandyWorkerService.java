@@ -24,6 +24,7 @@ import domain.FixUpTask;
 import domain.HandyWorker;
 import domain.Message;
 import domain.Phase;
+import domain.Report;
 import domain.SocialIdentity;
 import domain.Tutorial;
 import repositories.HandyWorkerRepository;
@@ -51,6 +52,9 @@ public class HandyWorkerService {
 
 	@Autowired
 	private ApplicationService applicationService;
+	
+	@Autowired
+	private ReportService reportService;
 
 	// Supporting services ----------------------------------------------------
 
@@ -320,5 +324,13 @@ public class HandyWorkerService {
 		List<FixUpTask> fixuptask = query.getResultList();
 
 		return fixuptask;
+	}
+	
+	public Report findReport(int reportId) {
+		Assert.notNull(reportId);
+		Assert.isTrue(reportService.exists(reportId));
+		Report res = reportService.findOne(reportId);
+		Assert.isTrue(res.isFinalMode()==false);
+		return res;
 	}
 }

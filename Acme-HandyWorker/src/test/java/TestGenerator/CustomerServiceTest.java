@@ -13,13 +13,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import domain.Application;
+import domain.Complaint;
 import domain.CreditCard;
 import domain.Customer;
 import domain.FixUpTask;
+import domain.Report;
 import security.LoginService;
 import services.ApplicationService;
+import services.ComplaintService;
 import services.CustomerService;
 import services.FixUpTaskService;
+import services.ReportService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
@@ -37,6 +41,12 @@ public class CustomerServiceTest extends AbstractTest {
 	
 	@Autowired
 	private ApplicationService applicationService;
+	
+	@Autowired
+	private ComplaintService complaintService;
+	
+	@Autowired
+	private ReportService reportService;
 
 
 	@Test
@@ -182,5 +192,43 @@ public class CustomerServiceTest extends AbstractTest {
 		result.setWarranty(fixUpTask.getWarranty());
 		result.setVersion(fixUpTask.getVersion());
 		return result;
+	}
+	
+	@Test
+	public void saveComplaintTest() {
+		Complaint complaint, saved;
+		Collection<Complaint> complaints;
+		this.authenticate(customerService.findAll().iterator().next().getUserAccount().getUsername());
+		complaint = this.complaintService.findAll().iterator().next();
+		complaint.setDescription("Description");
+		saved = this.complaintService.save(complaint);
+		complaints = this.complaintService.findAll();
+		Assert.isTrue(complaints.contains(saved));
+	}
+
+	@Test
+	public void findAllComplaintTest() {
+		Collection<Complaint> result;
+		result = this.complaintService.findAll();
+		Assert.notNull(result);
+	}
+
+	@Test
+	public void findOneComplaintTest() {
+		final Complaint complaint = this.complaintService.findAll().iterator().next();
+		final int complaintId = complaint.getId();
+		Assert.isTrue(complaintId != 0);
+		Complaint result;
+		result = this.complaintService.findOne(complaintId);
+		Assert.notNull(result);
+	}
+	
+	@Test
+	public void findOneReportTest() {
+		final Report report = this.reportService.findNotFinalModeReports().iterator().next();
+		Assert.notNull(report);
+		Report result;
+		result = this.customerService.findReport(report.getId());
+		Assert.notNull(result);
 	}
 }

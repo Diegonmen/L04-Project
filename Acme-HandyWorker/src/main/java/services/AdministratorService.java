@@ -16,7 +16,9 @@ import domain.Administrator;
 import domain.Box;
 import domain.Category;
 import domain.Message;
+import domain.Referee;
 import domain.SocialIdentity;
+import domain.Sponsor;
 import domain.Warranty;
 import repositories.AdministratorRepository;
 import security.Authority;
@@ -48,6 +50,12 @@ public class AdministratorService {
 	
 	@Autowired
 	private CategoryService categoryService;
+	
+	@Autowired
+	private RefereeService refereeService;
+	
+	@Autowired
+	private SponsorService sponsorService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -291,4 +299,129 @@ public class AdministratorService {
 		categoryService.delete(category);
 	}
 
+	public Sponsor saveSponsor(final Sponsor sponsor) {
+		Sponsor result, saved;
+		final UserAccount logedUserAccount;
+		Authority authority1;
+		Authority authority2;
+		Md5PasswordEncoder encoder;
+
+		encoder = new Md5PasswordEncoder();
+		authority1 = new Authority();
+		authority1.setAuthority("REFEREE");
+		authority2 = new Authority();
+		authority2.setAuthority("ADMINISTRATOR");
+		Assert.notNull(sponsor, "sponsor.not.null");
+
+		if (this.exists(sponsor.getId())) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "sponsor.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(sponsor.getUserAccount()), "sponsor.notEqual.userAccount");
+			saved = this.sponsorService.findOne(sponsor.getId());
+			Assert.notNull(saved, "referee.not.null");
+			Assert.isTrue(saved.getUserAccount().getUsername().equals(sponsor.getUserAccount().getUsername()), "sponsor.notEqual.username");
+			Assert.isTrue(sponsor.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "sponsor.notEqual.password");
+			Assert.isTrue(sponsor.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && sponsor.isSuspicious() == saved.isSuspicious(), "referee.notEqual.accountOrSuspicious");
+
+		} else {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "admin.notLogged ");
+			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "admin.notEqual.userAccount");
+			Assert.isTrue(sponsor.isSuspicious() == false, "admin.notSuspicious.false");
+			sponsor.getUserAccount().setPassword(encoder.encodePassword(sponsor.getUserAccount().getPassword(), null));
+			sponsor.getUserAccount().setEnabled(true);
+			Collection<Message> messages = new LinkedList<>();
+			Box inbox = new Box();
+			inbox.setName("INBOX");
+			inbox.setPredefined(true);
+			inbox.setMessages(messages);
+			Box outbox = new Box();
+			outbox.setName("OUTBOX");
+			outbox.setPredefined(true);
+			outbox.setMessages(messages);
+			Box trashbox = new Box();
+			trashbox.setName("TRASHBOX");
+			trashbox.setPredefined(true);
+			trashbox.setMessages(messages);
+			Box spambox = new Box();
+			spambox.setName("INBOX");
+			spambox.setPredefined(true);
+			spambox.setMessages(messages);
+			Collection<Box> boxes = new LinkedList<Box>();
+			boxes.add(inbox);
+			boxes.add(outbox);
+			boxes.add(trashbox);
+			boxes.add(spambox);
+			sponsor.setBoxes(boxes);
+
+		}
+
+		result = this.sponsorService.save(sponsor);
+
+		return result;
+
+	}
+	
+	public Referee saveReferee(final Referee referee) {
+		Referee result, saved;
+		final UserAccount logedUserAccount;
+		Authority authority1;
+		Authority authority2;
+		Md5PasswordEncoder encoder;
+
+		encoder = new Md5PasswordEncoder();
+		authority1 = new Authority();
+		authority1.setAuthority("REFEREE");
+		authority2 = new Authority();
+		authority2.setAuthority("ADMINISTRATOR");
+		Assert.notNull(referee, "referee.not.null");
+
+		if (this.exists(referee.getId())) {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "referee.notLogged ");
+			Assert.isTrue(logedUserAccount.equals(referee.getUserAccount()), "referee.notEqual.userAccount");
+			saved = this.refereeService.findOne(referee.getId());
+			Assert.notNull(saved, "referee.not.null");
+			Assert.isTrue(saved.getUserAccount().getUsername().equals(referee.getUserAccount().getUsername()), "referee.notEqual.username");
+			Assert.isTrue(referee.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "referee.notEqual.password");
+			Assert.isTrue(referee.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && referee.isSuspicious() == saved.isSuspicious(), "referee.notEqual.accountOrSuspicious");
+
+		} else {
+			logedUserAccount = LoginService.getPrincipal();
+			Assert.notNull(logedUserAccount, "admin.notLogged ");
+			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "admin.notEqual.userAccount");
+			Assert.isTrue(referee.isSuspicious() == false, "admin.notSuspicious.false");
+			referee.getUserAccount().setPassword(encoder.encodePassword(referee.getUserAccount().getPassword(), null));
+			referee.getUserAccount().setEnabled(true);
+			Collection<Message> messages = new LinkedList<>();
+			Box inbox = new Box();
+			inbox.setName("INBOX");
+			inbox.setPredefined(true);
+			inbox.setMessages(messages);
+			Box outbox = new Box();
+			outbox.setName("OUTBOX");
+			outbox.setPredefined(true);
+			outbox.setMessages(messages);
+			Box trashbox = new Box();
+			trashbox.setName("TRASHBOX");
+			trashbox.setPredefined(true);
+			trashbox.setMessages(messages);
+			Box spambox = new Box();
+			spambox.setName("INBOX");
+			spambox.setPredefined(true);
+			spambox.setMessages(messages);
+			Collection<Box> boxes = new LinkedList<Box>();
+			boxes.add(inbox);
+			boxes.add(outbox);
+			boxes.add(trashbox);
+			boxes.add(spambox);
+			referee.setBoxes(boxes);
+
+		}
+
+		result = this.refereeService.save(referee);
+
+		return result;
+
+	}
 }

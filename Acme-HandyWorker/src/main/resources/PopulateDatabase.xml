@@ -2120,6 +2120,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 
 	<bean id="complaint1" class="domain.Complaint">
@@ -2130,6 +2132,8 @@
 			<list>
 				<value>https://www.sample.com</value>
 			</list>
+		</property>
+		<property name="selfAsigned" value="false">
 		</property>
 	</bean>
 
@@ -2142,6 +2146,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 
 	<bean id="complaint3" class="domain.Complaint">
@@ -2152,6 +2158,8 @@
 			<list>
 				<value>https://www.sample.com</value>
 			</list>
+		</property>
+		<property name="selfAsigned" value="false">
 		</property>
 	</bean>
 
@@ -2164,6 +2172,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 
 	<bean id="complaint5" class="domain.Complaint">
@@ -2174,6 +2184,8 @@
 			<list>
 				<value>https://www.sample.com</value>
 			</list>
+		</property>
+		<property name="selfAsigned" value="true">
 		</property>
 	</bean>
 
@@ -2186,6 +2198,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="true">
+		</property>
 	</bean>
 
 	<bean id="complaint7" class="domain.Complaint">
@@ -2196,6 +2210,8 @@
 			<list>
 				<value>https://www.sample.com</value>
 			</list>
+		</property>
+		<property name="selfAsigned" value="false">
 		</property>
 	</bean>
 	
@@ -2208,6 +2224,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 	
 	<bean id="complaint9" class="domain.Complaint">
@@ -2218,6 +2236,8 @@
 			<list>
 				<value>https://www.sample.com</value>
 			</list>
+		</property>
+		<property name="selfAsigned" value="false">
 		</property>
 	</bean>
 	
@@ -2230,6 +2250,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 	
 	<bean id="complaint11" class="domain.Complaint">
@@ -2241,6 +2263,8 @@
 				<value>https://www.sample.com</value>
 			</list>
 		</property>
+		<property name="selfAsigned" value="false">
+		</property>
 	</bean>
 	
 	<!-- Reports -->
@@ -2251,6 +2275,7 @@
 		<property name="attachments">
 			<list></list>
 		</property>
+		<property name="finalMode" value="false"/>
 		<property name="complaints">
 			<list>
 				<ref bean="complaint0" />
@@ -2271,6 +2296,7 @@
 		<property name="attachments">
 			<list></list>
 		</property>
+		<property name="finalMode" value="true"/>
 		<property name="complaints">
 			<list>
 				<ref bean="complaint1" />
@@ -2292,6 +2318,7 @@
 		<property name="attachments">
 			<list></list>
 		</property>
+		<property name="finalMode" value="true"/>
 		<property name="complaints">
 			<list>
 				<ref bean="complaint2"/>
@@ -2311,6 +2338,7 @@
 		<property name="attachments">
 			<list></list>
 		</property>
+		<property name="finalMode" value="true"/>
 		<property name="complaints">
 			<list>
 				<ref bean="complaint6" />

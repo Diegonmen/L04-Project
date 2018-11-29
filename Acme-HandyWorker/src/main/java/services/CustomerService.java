@@ -20,6 +20,7 @@ import domain.Customer;
 import domain.Endorsement;
 import domain.FixUpTask;
 import domain.Message;
+import domain.Report;
 import domain.SocialIdentity;
 import repositories.CustomerRepository;
 import security.Authority;
@@ -43,6 +44,11 @@ public class CustomerService {
 	@Autowired
 	private ApplicationService applicationService;
 
+	@Autowired
+	private ComplaintService complaintService;
+	
+	@Autowired
+	private ReportService reportService;
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -297,5 +303,38 @@ public class CustomerService {
 			result = applicationService.save(application);
 			return result;
 		}
+	}
+	
+	public Collection<Complaint> findAllComplaints() {
+		Collection<Complaint> result;
+		Assert.notNull(this.complaintService);
+		result = this.complaintService.findAll();
+		Assert.notNull(result);
+		return result;
+	}
+
+	public Complaint findOneComplaint(final Integer id) {
+		Complaint res;
+		res = this.complaintService.findOne(id);
+		return res;
+	}
+
+	public Complaint saveComplaint(final Complaint c) {
+		Complaint res;
+		UserAccount logedUserAccount;
+		Authority authority = new Authority();
+		authority.setAuthority("CUSTOMER");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		res = this.complaintService.save(c);
+		return res;
+	}
+	
+	public Report findReport(int reportId) {
+		Assert.notNull(reportId);
+		Assert.isTrue(reportService.exists(reportId));
+		Report res = reportService.findOne(reportId);
+		Assert.isTrue(res.isFinalMode()==false);
+		return res;
 	}
 }

@@ -1,5 +1,6 @@
 package services;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,18 @@ public class ReportService {
 		return reportrepository.exists(id);
 	}
 
-	public void delete(Integer id) {
-		Assert.notNull(id);
-		reportrepository.delete(id);
+	public void delete(Report report) {
+		Assert.notNull(report);
+		reportrepository.delete(report);
 	}
 
 	public List<Report> findAll() {
 		return reportrepository.findAll();
 	}
 	
+	public Collection<Report> findNotFinalModeReports() {
+		Collection<Report> res = reportrepository.findNotFinalModeReports();
+		Assert.notEmpty(res);
+		return res;
+	}
 }

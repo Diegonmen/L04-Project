@@ -3,22 +3,22 @@ package services;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import domain.Box;
+import domain.Complaint;
+import domain.Referee;
+import domain.Report;
+import domain.SocialIdentity;
 import repositories.RefereeRepository;
 import security.Authority;
 import security.LoginService;
 import security.UserAccount;
-import domain.Box;
-import domain.Message;
-import domain.Referee;
-import domain.Report;
-import domain.SocialIdentity;
 
 @Service
 @Transactional
@@ -28,131 +28,102 @@ public class RefereeService {
 
 	@Autowired
 	private RefereeRepository	refereeRepository;
+	
+	@Autowired
+	private ReportService reportService;
 
-
-	// Supporting services ----------------------------------------------------
-
-	// Simple CRUD methods ----------------------------------------------------
-
-	public Collection<Referee> findAll() {
-		Collection<Referee> result;
-
-		result = this.refereeRepository.findAll();
-		Assert.notNull(result);
-
-		return result;
+	public Referee save(Referee entity) {
+		return refereeRepository.save(entity);
 	}
 
-	public boolean exists(final Integer arg0) {
-		return this.refereeRepository.exists(arg0);
+	public List<Referee> findAll() {
+		return refereeRepository.findAll();
 	}
 
-	public Referee findOne(final int refereeId) {
-		Assert.isTrue(refereeId != 0);
-
-		Referee result;
-
-		result = this.refereeRepository.findOne(refereeId);
-		Assert.notNull(result);
-
-		return result;
+	public Referee findOne(Integer id) {
+		return refereeRepository.findOne(id);
 	}
 
-	public Referee save(final Referee referee) {
-		Referee result, saved;
-		final UserAccount logedUserAccount;
-		Authority authority1;
-		Authority authority2;
-		Md5PasswordEncoder encoder;
-
-		encoder = new Md5PasswordEncoder();
-		authority1 = new Authority();
-		authority1.setAuthority("REFEREE");
-		authority2 = new Authority();
-		authority2.setAuthority("ADMINISTRATOR");
-		Assert.notNull(referee, "referee.not.null");
-
-		if (this.exists(referee.getId())) {
-			logedUserAccount = LoginService.getPrincipal();
-			Assert.notNull(logedUserAccount, "referee.notLogged ");
-			Assert.isTrue(logedUserAccount.equals(referee.getUserAccount()), "referee.notEqual.userAccount");
-			saved = this.refereeRepository.findOne(referee.getId());
-			Assert.notNull(saved, "referee.not.null");
-			Assert.isTrue(saved.getUserAccount().getUsername().equals(referee.getUserAccount().getUsername()), "referee.notEqual.username");
-			Assert.isTrue(referee.getUserAccount().getPassword().equals(saved.getUserAccount().getPassword()), "referee.notEqual.password");
-			Assert.isTrue(referee.getUserAccount().isAccountNonLocked() == saved.getUserAccount().isAccountNonLocked() && referee.isSuspicious() == saved.isSuspicious(), "referee.notEqual.accountOrSuspicious");
-
-		} else {
-			logedUserAccount = LoginService.getPrincipal();
-			Assert.notNull(logedUserAccount, "admin.notLogged ");
-			Assert.isTrue(logedUserAccount.getAuthorities().contains(authority2), "admin.notEqual.userAccount");
-			Assert.isTrue(referee.isSuspicious() == false, "admin.notSuspicious.false");
-			referee.getUserAccount().setPassword(encoder.encodePassword(referee.getUserAccount().getPassword(), null));
-			referee.getUserAccount().setEnabled(true);
-			Collection<Message> messages = new LinkedList<>();
-			Box inbox = new Box();
-			inbox.setName("INBOX");
-			inbox.setPredefined(true);
-			inbox.setMessages(messages);
-			Box outbox = new Box();
-			outbox.setName("OUTBOX");
-			outbox.setPredefined(true);
-			outbox.setMessages(messages);
-			Box trashbox = new Box();
-			trashbox.setName("TRASHBOX");
-			trashbox.setPredefined(true);
-			trashbox.setMessages(messages);
-			Box spambox = new Box();
-			spambox.setName("INBOX");
-			spambox.setPredefined(true);
-			spambox.setMessages(messages);
-			Collection<Box> boxes = new LinkedList<Box>();
-			boxes.add(inbox);
-			boxes.add(outbox);
-			boxes.add(trashbox);
-			boxes.add(spambox);
-			referee.setBoxes(boxes);
-
-		}
-
-		result = this.refereeRepository.save(referee);
-
-		return result;
-
+	public boolean exists(Integer id) {
+		return refereeRepository.exists(id);
 	}
 
+	public void delete(Referee entity) {
+		refereeRepository.delete(entity);
+	}
+	
 	public Referee create() {
 
 		Referee result;
 		UserAccount userAccount;
-		Authority authority1;
+		Authority authority;
 
 		result = new Referee();
 		userAccount = new UserAccount();
-		authority1 = new Authority();
+		authority = new Authority();
 
 		result.setSuspicious(false);
 
-		authority1.setAuthority("REFEREE");
-		userAccount.addAuthority(authority1);
+		authority.setAuthority("referee");
+		userAccount.addAuthority(authority);
 		userAccount.setEnabled(true);
 
 		final Collection<Box> boxes = new LinkedList<>();
 		result.setBoxes(boxes);
-		final Collection<Report> reports = new LinkedList<>();
-		result.setReports(reports);
 		final Collection<SocialIdentity> socialIdentities = new LinkedList<>();
 		result.setSocialIdentity(socialIdentities);
+		final Collection<Report> reports = new LinkedList<>();
+		result.setReports(reports);
 		result.setUserAccount(userAccount);
 
 		return result;
 
 	}
 
-	public void delete(final Referee referee) {
-		Assert.notNull(referee);
-		Assert.isTrue(this.refereeRepository.exists(referee.getId()));
-		this.refereeRepository.delete(referee);
+	public Report selfAssignComplaint(Report r, Complaint c) {
+		Assert.notNull(r);
+		Assert.notNull(c);
+		
+		r.getComplaints().add(c);
+		
+		return reportService.save(r);
 	}
+	
+	public Referee findRefereeByUserAccount(final UserAccount userAccount) {
+		Assert.notNull(userAccount);
+		Assert.isTrue(userAccount.getId() != 0);
+		final Referee res = this.refereeRepository.findByUserAccountId(userAccount.getId());
+		return res;
+	}
+	
+	public Report saveReport(final Report report) {
+		Assert.notNull(report);
+		Assert.isTrue(report.getId() != 0);
+		UserAccount logedUserAccount = LoginService.getPrincipal();
+		Referee referee = findRefereeByUserAccount(logedUserAccount);
+		Authority authority = new Authority();
+		authority.setAuthority("REFEREE");
+		Report saved = this.reportService.findOne(report.getId());
+		if(reportService.exists(report.getId()) && logedUserAccount.getAuthorities().contains(authority) && saved.isFinalMode() && findRefereeByUserAccount(logedUserAccount).equals(findRefereeByReport(report)) ) {
+			Assert.notNull(saved, "report.not.null");
+			Assert.isTrue(referee.getUserAccount().isAccountNonLocked() && !(referee.isSuspicious()),"referee.notEqual.accountOrSuspicious");
+			
+			Report result = this.reportService.save(report);
+			Assert.notNull(result);
+			return result;
+		}else {
+			Report result = this.reportService.findOne(report.getId());
+			return result;
+		}
+	}	
+		
+		public Referee findRefereeByReport(Report report) {
+			Assert.notNull(report);
+			Assert.isTrue(report.getId()!=0);
+			Referee res = refereeRepository.findRefereeByReportId(report.getId());
+			Assert.notNull(res);
+			return res;
+		}
+	
 
 }
