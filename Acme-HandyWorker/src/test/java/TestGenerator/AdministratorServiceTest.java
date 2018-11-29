@@ -13,10 +13,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 
 import domain.Administrator;
+import domain.Category;
 import domain.Customer;
+import domain.Warranty;
 import security.UserAccount;
 import services.AdministratorService;
+import services.CategoryService;
 import services.CustomerService;
+import services.FixUpTaskService;
+import services.WarrantyService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
@@ -31,6 +36,15 @@ public class AdministratorServiceTest extends AbstractTest {
 	
 	@Autowired
 	private CustomerService	customerService;
+
+	@Autowired
+	private WarrantyService warrantyService;
+
+	@Autowired
+	private FixUpTaskService fixUpTaskService;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 
 	@Test
@@ -143,5 +157,86 @@ public class AdministratorServiceTest extends AbstractTest {
 
 		return result;
 	}
+	
+	@Test
+	public void saveWarrantyTest() {
+		Warranty warranty, saved;
+		Collection<Warranty> warrantys;
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		warranty = fixUpTaskService.findAll().iterator().next().getWarranty();
+		warranty.setTitle("Test Title");
+		saved = warrantyService.save(warranty);
+		warrantys = warrantyService.findAll();
+		Assert.isTrue(warrantys.contains(saved));
+	}
+
+	@Test
+	public void findAllWarrantyTest() {
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		Collection<Warranty> result;
+		result = warrantyService.findAll();
+		Assert.notNull(result);
+	}
+
+	@Test
+	public void findOneWarrantyTest() {
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		Warranty warranty = warrantyService.findAll().iterator().next();
+		int warrantyId = warranty.getId();
+		Assert.isTrue(warrantyService.exists(warrantyId));
+		Warranty result;
+		result = warrantyService.findOne(warrantyId);
+		Assert.notNull(result);
+	}
+
+	@Test
+	public void deleteWarrantyTest() {
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		Warranty warranty = warrantyService.findDraftModeWarranties().iterator().next();
+		Assert.notNull(warranty);
+		Assert.isTrue(this.warrantyService.exists(warranty.getId()));
+		this.warrantyService.delete(warranty);
+	}
+
+	@Test
+	public void saveCategoryTest() {
+		Category category, saved;
+		Collection<Category> categorys;
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		category = categoryService.findAll().iterator().next();
+		category.setName("Test Name");
+		;
+		saved = categoryService.save(category);
+		categorys = categoryService.findAll();
+		Assert.isTrue(categorys.contains(saved));
+	}
+
+	@Test
+	public void findAllCategoryTest() {
+		Collection<Category> result;
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		result = categoryService.findAll();
+		Assert.notEmpty(result);
+	}
+
+	@Test
+	public void findOneCategoryTest() {
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		Category category = categoryService.findAll().iterator().next();
+		Assert.isTrue(categoryService.exists(category.getId()));
+		Category result;
+		result = categoryService.findOne(category.getId());
+		Assert.notNull(result);
+	}
+
+	@Test
+	public void deleteCategoryTest() {
+		this.authenticate(this.administratorService.findAll().iterator().next().getUserAccount().getUsername());
+		Category category = categoryService.findAll().iterator().next();
+		Assert.notNull(category);
+		Assert.isTrue(this.categoryService.exists(category.getId()));
+		this.categoryService.delete(category);
+	}
+
 
 }

@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -13,8 +14,10 @@ import org.springframework.util.Assert;
 import domain.Actor;
 import domain.Administrator;
 import domain.Box;
+import domain.Category;
 import domain.Message;
 import domain.SocialIdentity;
+import domain.Warranty;
 import repositories.AdministratorRepository;
 import security.Authority;
 import security.LoginService;
@@ -29,6 +32,8 @@ public class AdministratorService {
 	@Autowired
 	private AdministratorRepository	administratorRepository;
 
+	// Supporting services ----------------------------------------------------
+	
 	@Autowired
 	private ActorService			actorservice;
 	
@@ -37,9 +42,13 @@ public class AdministratorService {
 	
 	@Autowired
 	private MessageService messageservice;
+	
+	@Autowired
+	private WarrantyService warrantyService;
+	
+	@Autowired
+	private CategoryService categoryService;
 
-
-	// Supporting services ----------------------------------------------------
 
 	// Simple CRUD methods ----------------------------------------------------
 	
@@ -175,6 +184,111 @@ public class AdministratorService {
 		
 		userAccount.setEnabled(!userAccount.isEnabled());
 		return this.loginservice.save(userAccount);
+	}
+	
+	public Warranty saveWarranty(Warranty warranty) {
+		Warranty result, saved;
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		
+		if(exists(warranty.getId()) && logedUserAccount.getAuthorities().contains(authority) && !warranty.isFinalMode()) {
+			saved = this.warrantyService.findOne(warranty.getId());
+			Assert.notNull(saved);
+			result = this.warrantyService.save(warranty);
+			Assert.notNull(result);
+			return result;
+		}
+		
+		result = this.warrantyService.findOne(warranty.getId());
+		return result;
+	}
+
+	public List<Warranty> findAllWarranties() {
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		return warrantyService.findAll();
+	}
+
+	public Warranty findOneWarranty(Integer warrantyId) {
+		Assert.isTrue(exists(warrantyId));
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		return warrantyService.findOne(warrantyId);
+	}
+
+	public void deleteWarranty(Warranty warranty) {
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority) && !warranty.isFinalMode());
+		warrantyService.delete(warranty);
+	}
+
+	public Category saveCategory(Category category) {
+		Category result, saved;
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		
+		if(exists(category.getId()) && logedUserAccount.getAuthorities().contains(authority)) {
+			saved = this.categoryService.findOne(category.getId());
+			Assert.notNull(saved);
+			result = this.categoryService.save(category);
+			Assert.notNull(result);
+			return result;
+		}
+		
+		result = this.categoryService.findOne(category.getId());
+		return result;
+	}
+
+	public List<Category> findAllCategories() {
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		return categoryService.findAll();
+	}
+
+	public Category findOneCategory(Integer categoryId) {
+		Assert.isTrue(exists(categoryId));
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		return categoryService.findOne(categoryId);
+	}
+
+	public void deleteCategory(Category category) {
+		Assert.notNull(category);
+		Assert.isTrue(exists(category.getId()));
+		
+		UserAccount logedUserAccount;
+		Authority authority;
+		authority = new Authority();
+		authority.setAuthority("ADMINISTRATOR");
+		logedUserAccount = LoginService.getPrincipal();
+		Assert.isTrue(logedUserAccount.getAuthorities().contains(authority));
+		categoryService.delete(category);
 	}
 
 }

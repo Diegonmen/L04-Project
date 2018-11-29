@@ -17,6 +17,7 @@ import domain.Customer;
 import domain.FixUpTask;
 import services.CustomerService;
 import services.FixUpTaskService;
+import services.HandyWorkerService;
 import utilities.AbstractTest;
 
 @ContextConfiguration(locations = {
@@ -30,10 +31,12 @@ public class FixUpTaskServiceTest extends AbstractTest {
 	private FixUpTaskService	fixuptaskService;
 	@Autowired
 	private CustomerService		customerService;
+	@Autowired
+	private HandyWorkerService handyWorkerService;
 
 	@Test
 	public void findFixUpTask() {
-		List<FixUpTask> list = fixuptaskService.filter("970203", 10);
+		List<FixUpTask> list = handyWorkerService.filter("970203", 10);
 		
 		Assert.isTrue(!list.isEmpty());
 	}

@@ -4,6 +4,11 @@ package services;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -28,8 +33,11 @@ import security.UserAccount;
 
 @Service
 @Transactional
+@SuppressWarnings("unchecked")
 public class HandyWorkerService {
 
+	@PersistenceContext
+	EntityManager entitymanager;
 	// Managed repository -----------------------------------------------------
 
 	@Autowired
@@ -302,4 +310,15 @@ public class HandyWorkerService {
 		}
 	}
 
+
+	public List<FixUpTask> filter(String command, int maxResults) {
+		Query query = entitymanager.createQuery(
+				"select c from FixUpTask c where c.ticker like CONCAT('%',:command,'%') or c.description like CONCAT('%',:command,'%') or c.address like CONCAT('%',:command,'%') or c.maxPrice = :command")
+				.setMaxResults(maxResults);
+		query.setParameter("command", command);
+
+		List<FixUpTask> fixuptask = query.getResultList();
+
+		return fixuptask;
+	}
 }

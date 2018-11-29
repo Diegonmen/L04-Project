@@ -4,10 +4,6 @@ package services;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +15,6 @@ import repositories.FixUpTaskRepository;
 
 @Service
 @Transactional
-@SuppressWarnings("unchecked")
 public class FixUpTaskService {
 
 	// Managed repository -----------------------------------------------------
@@ -32,8 +27,7 @@ public class FixUpTaskService {
 	@Autowired
 	private CustomerService customerService;
 
-	@PersistenceContext
-	EntityManager entitymanager;
+	
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -77,16 +71,6 @@ public class FixUpTaskService {
 		return res;
 	}
 
-	public List<FixUpTask> filter(String command, int maxResults) {
-		Query query = entitymanager.createQuery(
-				"select c from FixUpTask c where c.ticker like CONCAT('%',:command,'%') or c.description like CONCAT('%',:command,'%') or c.address like CONCAT('%',:command,'%') or c.maxPrice = :command")
-				.setMaxResults(maxResults);
-		query.setParameter("command", command);
-
-		List<FixUpTask> fixuptask = query.getResultList();
-
-		return fixuptask;
-	}
 	
 	public Collection<Double> findAvgMinMaxStdDvtFixUpTasks() {
 		  Collection<Double> res = fixUpTaskRepository.findFixUpTaskAvgMinMaxStrDvt();
