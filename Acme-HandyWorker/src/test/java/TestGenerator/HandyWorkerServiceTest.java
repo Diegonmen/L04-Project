@@ -226,4 +226,10 @@ public class HandyWorkerServiceTest extends AbstractTest {
 		result = this.handyworkerService.findReport(report.getId());
 		Assert.notNull(result);
 	}
+	
+	@Test
+	public void handyWorkersWith10PercentMoreAvgApplicatios() {
+		Collection<HandyWorker> res = this.handyworkerService.handyWorkersWith10PercentMoreAvgApplicatios();
+		Assert.notNull(res);
+	}
 }

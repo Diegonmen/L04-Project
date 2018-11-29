@@ -342,6 +342,11 @@ public class CustomerService {
 		return res;
 	}
 	
+	public Collection<Customer> customersWith10PercentMoreAvgFixUpTask() {
+		Collection<Customer> res = this.customerRepository.customersWith10PercentMoreAvgFixUpTask();
+		return res;
+	}
+	
 	public Note saveNote(Note note, Report report) {
 		Assert.notNull(note);
 		Assert.notNull(report);
